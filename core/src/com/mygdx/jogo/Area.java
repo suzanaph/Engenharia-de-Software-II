@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mygdx.game;
+package com.mygdx.jogo;
 
 /**
  *
  * @author manue_000
  */
-public class JanelaMenu {
+public class Area {
     
 }
