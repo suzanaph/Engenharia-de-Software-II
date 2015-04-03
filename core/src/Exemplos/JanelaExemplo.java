@@ -7,6 +7,7 @@ package Exemplos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -38,15 +39,17 @@ public class JanelaExemplo implements Screen {
         imagens = new ArrayList<Actor>();
         Actor q1 = new Image(new Texture("exemplo/quadrado.png"));
         q1.setPosition(100, 100);
+        q1.setColor(Color.GREEN);
         Actor q2 = new Image(new Texture("exemplo/quadrado.png"));
         q2.setPosition(100, 300);
         Actor p1 = new Image(new Texture("exemplo/peca.png"));
         p1.setPosition(120 , 120);
-        p1.addAction(Actions.sequence(Actions.delay(2),Actions.moveBy(0, 200,2)));
+        //Ações do actor
+        p1.addAction(Actions.sequence(Actions.delay(2),Actions.moveBy(100, 200,2)));
         imagens.add(q1);
         imagens.add(q2);
         imagens.add(p1);
-        
+       
         for (Actor imagen : imagens) {
             estagio.addActor(imagen);
         }
