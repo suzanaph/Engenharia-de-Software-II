@@ -5,10 +5,12 @@
  */
 package com.mygdx.janelas;
 
+import com.badlogic.gdx.Screen;
+
 /**
  *
  * @author manue_000
  */
-public abstract class Janela {
+public abstract class Janela implements Screen {
     
 }
