@@ -5,7 +5,9 @@
  */
 package com.mygdx.janelas;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
  *
@@ -13,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  */
 public class JanelaMenu  extends Janela{
 
-   private Actor iniciar; //Botão para iniciar a partida.
-   private Actor pontuacao; //Botão para ver a pontuação
-   private Actor regras; //Botão para ver as regras
+   private Actor iniciar= new Image(new Texture ("")); //Botão para iniciar a partida.
+   private Actor pontuacao= new Image(new Texture (""));; //Botão para ver a pontuação
+   private Actor regras= new Image(new Texture (""));; //Botão para ver as regras
    
     
 
