@@ -64,7 +64,10 @@ public class JanelaExemplo implements Screen {
 		camera.update();
 		estagio.act(Gdx.graphics.getDeltaTime());
 		
-		estagio.draw();    }
+		estagio.draw();   
+   
+   
+    }
 
     @Override
     public void resize(int width, int height) {
