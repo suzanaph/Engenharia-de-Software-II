@@ -5,12 +5,23 @@
  */
 package com.mygdx.janelas;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 /**
  *
  * @author manue_000
  */
 public class JanelaMenu  extends Janela{
 
+   private Actor iniciar; //Botão para iniciar a partida.
+   private Actor pontuacao; //Botão para ver a pontuação
+   private Actor regras; //Botão para ver as regras
+   
+    
+
+    
+    
+    
     @Override
     public void show() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
