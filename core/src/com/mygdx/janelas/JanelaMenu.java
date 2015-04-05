@@ -70,10 +70,10 @@ public class JanelaMenu extends Janela {
             //Realiza o tratamento das alterações de dimenção
             camera.unproject(vetor.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             //Se o usuario clicar na botão inciar a janela do jogo é exibida    
-            if (Gdx.input.getX() >= iniciar.getX()
-                    && Gdx.input.getX() <= iniciar.getX() + iniciar.getWidth()
-                    && Gdx.input.getY() >= iniciar.getY()
-                    && Gdx.input.getY() <= iniciar.getY() + iniciar.getHeight()) {
+            if (vetor.x >= iniciar.getX()
+                    &&vetor.x <= iniciar.getX() + iniciar.getWidth()
+                    && vetor.y >= iniciar.getY()
+                    && vetor.y <= iniciar.getY() + iniciar.getHeight()) {
 
                 jogo.setScreen(new JanelaJogo(jogo));
 
