@@ -66,7 +66,7 @@ public class JanelaMenu extends Janela {
             //hit retorna dentre todos os objetos do estagio aquele que foi clicado
              Actor a = estagio.hit(vetor.x, vetor.y, true);
             //Se o usuario clicar na botão inciar a janela do jogo é exibida    
-            if (a.equals(iniciar)) {
+            if (a!=null && a.equals(iniciar)) {
 
                 jogo.setScreen(new JanelaJogo(jogo));
 
