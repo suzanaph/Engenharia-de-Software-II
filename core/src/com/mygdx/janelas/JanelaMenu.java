@@ -35,6 +35,7 @@ public class JanelaMenu extends Janela {
         estagio = new Stage(view);
 
         iniciar = new Image(new Texture("brinquedo.png"));
+       
 //Botão para iniciar a partida.
 //   private Actor pontuacao= new Image(new Texture (""));; //Botão para ver a pontuação
 //   private Actor regras= new Image(new Texture (""));; //Botão para ver as regras
@@ -60,20 +61,12 @@ public class JanelaMenu extends Janela {
         estagio.draw();
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            System.out.println(Gdx.input.getX()+" , "+Gdx.input.getY());
-            System.out.println("");
-            System.out.println("");
-            System.out.println(iniciar.getX());
-            System.out.println( iniciar.getX() + iniciar.getWidth());
-            System.out.println(iniciar.getY());
-            System.out.println(iniciar.getY() + iniciar.getHeight());
             //Realiza o tratamento das alterações de dimenção
             camera.unproject(vetor.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+            //hit retorna dentre todos os objetos do estagio aquele que foi clicado
+             Actor a = estagio.hit(vetor.x, vetor.y, true);
             //Se o usuario clicar na botão inciar a janela do jogo é exibida    
-            if (vetor.x >= iniciar.getX()
-                    &&vetor.x <= iniciar.getX() + iniciar.getWidth()
-                    && vetor.y >= iniciar.getY()
-                    && vetor.y <= iniciar.getY() + iniciar.getHeight()) {
+            if (a.equals(iniciar)) {
 
                 jogo.setScreen(new JanelaJogo(jogo));
 
