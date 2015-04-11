@@ -5,28 +5,26 @@
  */
 package com.mygdx.dado;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Scanner;
-
 /**
  *
  * @author manue_000
  */
-public class Usuario {
+public class Usuario implements Comparable {
 
-    private String nome;
-    private int pontuacao;
+     String nome;
+     int pontuacao;
 
+    public Usuario() {
+    }
 
     public Usuario(String nome, int pontuacao) {
         this.nome = nome;
         this.pontuacao = pontuacao;
-
     }
 
-
+    @Override
+    public int compareTo(Object usuario) {
+     return this.pontuacao-((Usuario)usuario).pontuacao;
+    }
 
 }

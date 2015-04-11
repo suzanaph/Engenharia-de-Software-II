@@ -30,7 +30,7 @@ Jogo jogo;
         ScreenViewport view = new ScreenViewport(camera);
         estagio = new Stage(view);
 
-        Actor imagemDeFundo = new Image(new Texture("cai.jpg"));
+        Actor imagemDeFundo = new Image(new Texture("dama.jpg"));
         imagemDeFundo.setSize(camera.viewportWidth, camera.viewportHeight);
         estagio.addActor(imagemDeFundo);
     }

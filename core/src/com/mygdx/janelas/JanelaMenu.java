@@ -16,6 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.jogo.Jogo;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -44,7 +50,7 @@ public class JanelaMenu extends Janela {
         regras = new Image(new Texture("regras.png"));;
 
         iniciar.setPosition(0, 500);
-        pontuacao.setPosition(0,200);
+        pontuacao.setPosition(0, 200);
         regras.setPosition(0, 0);
         estagio.addActor(iniciar);
         estagio.addActor(pontuacao);
@@ -76,15 +82,24 @@ public class JanelaMenu extends Janela {
 
                 jogo.setScreen(new JanelaJogo(jogo));
 
-            }
+            } //Se o usuario clicar na botão inciar a janela do jogo é exibida 
             if (a != null && a.equals(pontuacao)) {
 
                 jogo.setScreen(new JanelaJogo(jogo));
 
-            }
+            } //Se o usuario clicar na botão inciar a janela do jogo é exibida 
             if (a != null && a.equals(regras)) {
 
-                jogo.setScreen(new JanelaJogo(jogo));
+            if(Desktop.isDesktopSupported())
+{
+                try {
+                    Desktop.getDesktop().browse(new URI("http://www.xadrezregional.com.br/regrasdm.html"));
+                } catch (IOException ex) {
+                    Logger.getLogger(JanelaMenu.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (URISyntaxException ex) {
+                    Logger.getLogger(JanelaMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+}
 
             }
 
