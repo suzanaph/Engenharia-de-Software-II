@@ -24,6 +24,9 @@ import com.mygdx.jogo.Jogo;
 public class JanelaMenu extends Janela {
 
     private Actor iniciar;
+    private Actor pontuacao;
+    private Actor regras;
+
     private Jogo jogo;
 
     public JanelaMenu(Jogo jogo) {
@@ -33,16 +36,19 @@ public class JanelaMenu extends Janela {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         ScreenViewport view = new ScreenViewport(camera);
         estagio = new Stage(view);
+        //Botão para iniciar a partida.
+        iniciar = new Image(new Texture("iniciar.png"));
+        //Botão para ver a pontuação
+        pontuacao = new Image(new Texture("pontuacao.png"));
+        //Botão para ver as regras
+        regras = new Image(new Texture("regras.png"));;
 
-        iniciar = new Image(new Texture("brinquedo.png"));
-       
-//Botão para iniciar a partida.
-//   private Actor pontuacao= new Image(new Texture (""));; //Botão para ver a pontuação
-//   private Actor regras= new Image(new Texture (""));; //Botão para ver as regras
-//
-
-        iniciar.setPosition(0, 0);
+        iniciar.setPosition(0, 500);
+        pontuacao.setPosition(0,200);
+        regras.setPosition(0, 0);
         estagio.addActor(iniciar);
+        estagio.addActor(pontuacao);
+        estagio.addActor(regras);
     }
 
     @Override
@@ -52,7 +58,7 @@ public class JanelaMenu extends Janela {
     @Override
     public void render(float f) {
         GL20 gl = Gdx.gl;
-        gl.glClearColor(0, 0, 0, 1);
+        gl.glClearColor(1, 1, 1, 1);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
@@ -61,12 +67,22 @@ public class JanelaMenu extends Janela {
         estagio.draw();
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            //Realiza o tratamento das alterações de dimenção
+            //Realiza o tratamento das alterações de dimenção da janela
             camera.unproject(vetor.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             //hit retorna dentre todos os objetos do estagio aquele que foi clicado
-             Actor a = estagio.hit(vetor.x, vetor.y, true);
+            Actor a = estagio.hit(vetor.x, vetor.y, true);
             //Se o usuario clicar na botão inciar a janela do jogo é exibida    
-            if (a!=null && a.equals(iniciar)) {
+            if (a != null && a.equals(iniciar)) {
+
+                jogo.setScreen(new JanelaJogo(jogo));
+
+            }
+            if (a != null && a.equals(pontuacao)) {
+
+                jogo.setScreen(new JanelaJogo(jogo));
+
+            }
+            if (a != null && a.equals(regras)) {
 
                 jogo.setScreen(new JanelaJogo(jogo));
 
