@@ -21,15 +21,9 @@ import com.mygdx.jogo.Jogo;
  * @author manue_000
  */
 public class JanelaJogo extends Janela {
-Jogo jogo;
-    public JanelaJogo(Jogo jogo) {
-        this.jogo=jogo;
-        vetor = new Vector3();
-        camera = new OrthographicCamera(800, 600);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-        ScreenViewport view = new ScreenViewport(camera);
-        estagio = new Stage(view);
 
+    public JanelaJogo() { 
+        super();
         Actor imagemDeFundo = new Image(new Texture("dama.jpg"));
         imagemDeFundo.setSize(camera.viewportWidth, camera.viewportHeight);
         estagio.addActor(imagemDeFundo);

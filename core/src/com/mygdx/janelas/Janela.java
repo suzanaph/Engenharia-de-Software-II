@@ -9,9 +9,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,8 +25,15 @@ public abstract class Janela implements Screen {
    protected Vector3 vetor;
    protected Stage estagio;
    protected Music music;
-   protected ArrayList<Sound> sons;
-   
+   protected List<Sound> sons;
+   public Janela(){
+       vetor = new Vector3();
+        camera = new OrthographicCamera(800, 600);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        ScreenViewport view = new ScreenViewport(camera);
+        estagio = new Stage(view);
+        sons = new ArrayList<Sound>();
+   }
    
    
 }

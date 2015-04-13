@@ -4,12 +4,17 @@ import com.badlogic.gdx.Game;
 import com.mygdx.janelas.JanelaMenu;
 
 public class Jogo extends Game  {
-    
+        private static Jogo instance;
+        public static Jogo getInstance(){
+            
+            return instance;
+        }
+        public Jogo(){}
         
-	
 	@Override
 	public void create () {
-		setScreen(new JanelaMenu(this));
+                instance = this;
+		setScreen(new JanelaMenu());
 	}
 
 	@Override
