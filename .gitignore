@@ -66,8 +66,6 @@ build/
 .nb-gradle/private/cache/desktop-9bccb601584b92d9c041663102aef73f
 .nb-gradle/profiles/private/aux-config
 .nb-gradle/private/cache/Engenharia-de-So-d41d8cd98f00b204e9800998ecf8427e
-core/assets/exemplo/quadrado.png
-*.png
 core/src/Exemplos/JanelaExemplo.java
 .nb-gradle-properties
 core/src/com/mygdx/janelas/Janela.java

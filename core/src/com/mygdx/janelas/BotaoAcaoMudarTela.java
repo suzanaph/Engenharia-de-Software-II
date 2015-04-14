@@ -18,7 +18,7 @@ public class BotaoAcaoMudarTela extends BotaoAcao{
     }
 
     @Override
-    public void ativar() {
+    public void realizar() {
         if(arg.equals("jogo")){
          Jogo.getInstance().setScreen(new JanelaJogo());
         }else if(arg.equals("pontuacao")){

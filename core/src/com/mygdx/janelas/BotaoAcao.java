@@ -10,9 +10,13 @@ package com.mygdx.janelas;
  * @author fabio
  */
 public abstract class BotaoAcao {
-    String arg;
+    /*
+    Classe BotaoAcao é um componente de botao que define a ação que mesmo realiza quando clicado, 
+    essa ação é definida pela implementação do método realizar.
+    */
+    String arg;//argumento auxiliar
     public BotaoAcao(String arg){
         this.arg=arg;
     };
-    public abstract void ativar();
+    public abstract void realizar();
 }
