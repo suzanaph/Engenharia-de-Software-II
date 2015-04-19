@@ -10,7 +10,7 @@ package com.mygdx.jogo;
  * @author manue_000
  */
 public class Estado {
-  int[][] estados={
+  int[][] matriz={
       {1,0,1,0,1,0,1,0},
       {0,1,0,1,0,1,0,1},
       {1,0,1,0,1,0,1,0},

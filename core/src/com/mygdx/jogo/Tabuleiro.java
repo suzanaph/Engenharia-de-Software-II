@@ -21,6 +21,7 @@ public class Tabuleiro {
     int altura = 8;
     int posX;
     int posY;
+    Estado estado = new Estado();
     Area[][] posicoes; //Matriz que controla as posições do tabuleiro
 
     private Tabuleiro() {
@@ -39,7 +40,17 @@ public class Tabuleiro {
                 }
 
                 posicoes[lin][col] = new Area(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, cor);
+                if (estado.matriz[lin][col] == 1) {
+                    if (lin >= 0 && lin <= 2) {
+                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, true);
+                    }
+                }
 
+                if (estado.matriz[lin][col] == 1) {
+                    if (lin >= 5 && lin <= 7) {
+                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, false);
+                    }
+                }
             }
 
         }
@@ -62,7 +73,9 @@ public class Tabuleiro {
         for (int i = 0; i < posicoes.length; i++) {
             for (int j = 0; j < posicoes.length; j++) {
                 estagio.addActor(posicoes[i][j].imagem);
-
+                if (posicoes[i][j].peca != null) {
+                    estagio.addActor(posicoes[i][j].peca.imagem);
+                }
             }
 
         }
