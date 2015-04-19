@@ -17,22 +17,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 public class Botao {
     Actor imagem;
-    BotaoAcao a;
+    BotaoAcao acao;
     private boolean clicado;
     public Botao(String url,int x ,int y,BotaoAcao a){
         this.imagem =  new Image(new Texture(url));
         this.imagem.setPosition(x, y);
-        this.a = a;
+        this.acao = a;
     };
-    public void checarClick(Actor entrada){
-        if(entrada.equals(imagem)){
-            clicado = true;
-            imagem.addAction(Actions.sequence(
-                    Actions.scaleBy(0.2f, 0.2f, 0.5f),
-                    Actions.color(Color.GREEN),
-                    Actions.scaleBy(-0.2f, -0.2f, 0.5f),
-                    Actions.color(Color.RED)
-            ));
+    public void checarClique(Actor entrada){
+        if(!clicado){
+            if(entrada.equals(imagem)){
+                clicado = true;// marca que o botão foi clicado
+                imagem.addAction(Actions.sequence(
+                        Actions.color(Color.GREEN),
+                        Actions.delay(0.2f),
+                        Actions.color(Color.RED)
+                ));
+            }
+        }
+    }
+    public void executar(){
+        if(clicado && imagem.getActions().size==0){
+            acao.realizar();
+            clicado = false;
         }
     }
 }

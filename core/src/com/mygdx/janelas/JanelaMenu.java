@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.awt.Desktop;
@@ -39,9 +40,9 @@ public class JanelaMenu extends Janela {
     public JanelaMenu() {
          super();
          botoes = new ArrayList<Botao>();
-        //Botão para iniciar a partida.
+        //Botão para iniciar acao partida.
         botoes.add(new Botao("iniciar.png", 10, 50,new BotaoAcaoMudarTela("jogo")));
-        //Botão para ver a pontuação
+        //Botão para ver acao pontuação
         botoes.add(new Botao("pontuacao.png", 140, 50,new BotaoAcaoMudarTela("jogo")));
         //Botão para ver as regras
         botoes.add(new Botao("regras.png", 270, 50,new BotaoAcaoMudarTela("jogo")));
@@ -49,10 +50,12 @@ public class JanelaMenu extends Janela {
         botoes.add(new Botao("configuracoes.png", 400, 50,new BotaoAcaoMudarTela("jogo")));
         //Botão para sair do jogo
         botoes.add(new Botao("sair.png", 530, 50,new BotaoAcaoMudarTela("jogo")));
+        
         fundo = new Image(new Texture("fundo.png"));
-
+        fundo.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(1),Actions.fadeIn(1)));
         estagio.addActor(fundo);
         for (Botao botao : botoes) {
+            botao.imagem.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(2),Actions.fadeIn(1)));
             estagio.addActor(botao.imagem);
         }
     }
@@ -77,14 +80,17 @@ public class JanelaMenu extends Janela {
             camera.unproject(vetor.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             //hit retorna dentre todos os objetos do estagio aquele que foi clicado
             Actor a = estagio.hit(vetor.x, vetor.y, true);
-            //Se o usuario clicar na botão inciar a janela do Jogo.getInstance() é exibida    
-
-            if (a != null) {
+            //Se o usuario clicar na botão inciar acao janela do Jogo.getInstance() é exibida    
+            //qual botão possui a imagem que foi clicada
+            
                 for (Botao botao : botoes) {
-                   botao.checarClick(a);
+                    if (a != null) {
+                        botao.checarClique(a);
+                    }
+                    botao.executar();
                 }
 
-            } //Se o usuario clicar na botão inciar a janela do Jogo é exibida 
+             //Se o usuario clicar na botão inciar acao janela do Jogo é exibida 
 
 //                if (Desktop.isDesktopSupported()) {
 //                    try {
