@@ -69,4 +69,5 @@ build/
 core/src/Exemplos/JanelaExemplo.java
 .nb-gradle-properties
 core/src/com/mygdx/janelas/Janela.java
-core/assets/Thumbs.db
+
+
