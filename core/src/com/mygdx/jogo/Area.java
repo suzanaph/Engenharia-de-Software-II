@@ -5,6 +5,7 @@
  */
 package com.mygdx.jogo;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -14,12 +15,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  * @author manue_000
  */
 public class Area {
-    int[][] posicaon=new int[1][2];
+
+    int[][] posicaon = new int[1][2];
     Actor peca;
     Actor imagem;
-    String diretorio="area.pgn";
-    Area(int x,int y ,int posicao) {
-      imagem.setPosition(x, y);
-          this.imagem = new Image(new Texture(diretorio));
+    static int LARGURA = 75;
+    static int ALTURA = 75;
+    String diretorio = "area.pgn";
+
+    Area(int x, int y, Color cor) {
+        this.imagem = new Image(new Texture(diretorio));
+        imagem.setPosition(x, y);
+        this.imagem.setColor(cor);
     }
 }
