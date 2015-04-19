@@ -43,13 +43,14 @@ public class Tabuleiro {
                 if (estado.matriz[lin][col] == 1) {
                     if (lin >= 0 && lin <= 2) {
                         posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, true);
+                        posicoes[lin][col].peca.imagem.setColor(Color.CYAN);
                     }
                 }
 
                 if (estado.matriz[lin][col] == 1) {
                     if (lin >= 5 && lin <= 7) {
                         posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, false);
-                    }
+                     posicoes[lin][col].peca.imagem.setColor(Color.PURPLE);}
                 }
             }
 
