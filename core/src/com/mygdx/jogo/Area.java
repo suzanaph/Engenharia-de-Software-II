@@ -17,11 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class Area {
 
     int[][] posicaon = new int[1][2];
-    Actor peca;
+    Peca peca;
     Actor imagem;
     static int LARGURA = 75;
     static int ALTURA = 75;
-    String diretorio = "area.pgn";
+    String diretorio = "area.png";
 
     Area(int x, int y, Color cor) {
         this.imagem = new Image(new Texture(diretorio));

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.jogo.Jogo;
+import com.mygdx.jogo.Tabuleiro;
 
 /**
  *
@@ -27,6 +28,8 @@ public class JanelaJogo extends Janela {
         Actor imagemDeFundo = new Image(new Texture("dama.jpg"));
         imagemDeFundo.setSize(camera.viewportWidth, camera.viewportHeight);
         estagio.addActor(imagemDeFundo);
+        Tabuleiro tabuleiro= Tabuleiro.retornaInstancia();
+        tabuleiro.adcionaArea(estagio);
     }
 
     @Override

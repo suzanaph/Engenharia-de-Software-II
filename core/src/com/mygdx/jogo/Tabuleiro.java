@@ -6,6 +6,7 @@
 package com.mygdx.jogo;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,18 @@ public class Tabuleiro {
             instancia = new Tabuleiro();
         }
         return instancia;
+    }
+
+    public void adcionaArea(Stage estagio) {
+
+        for (int i = 0; i < posicoes.length; i++) {
+            for (int j = 0; j < posicoes.length; j++) {
+                estagio.addActor(posicoes[i][j].imagem);
+
+            }
+
+        }
+
     }
 
 }
