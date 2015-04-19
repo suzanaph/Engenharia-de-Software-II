@@ -22,7 +22,7 @@ import com.mygdx.jogo.Tabuleiro;
  * @author manue_000
  */
 public class JanelaJogo extends Janela {
-
+    
     public JanelaJogo() { 
         super();
         Actor imagemDeFundo = new Image(new Texture("dama.jpg"));
@@ -30,20 +30,12 @@ public class JanelaJogo extends Janela {
         estagio.addActor(imagemDeFundo);
         Tabuleiro tabuleiro= Tabuleiro.retornaInstancia();
         tabuleiro.adcionaArea(estagio);
+        botoes.add(new Botao("iniciar.png", 700, 50,new BAMudarTela(BAMudarTela.MENU)));
+        estagio.addActor(botoes.get(0).imagem);
     }
 
     @Override
     public void show() {
-    }
-
-    @Override
-    public void render(float f) {
-        GL20 gl = Gdx.gl;
-        gl.glClearColor(0, 0, 0, 1);
-        gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        camera.update();
-        estagio.act(Gdx.graphics.getDeltaTime());
-        estagio.draw();
     }
 
     @Override
@@ -64,6 +56,10 @@ public class JanelaJogo extends Janela {
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    void processa() {
     }
 
 }

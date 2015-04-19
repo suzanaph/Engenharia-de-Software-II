@@ -34,22 +34,22 @@ import java.util.logging.Logger;
 
 public class JanelaMenu extends Janela {
 
-    private List<Botao> botoes;
-    Actor fundo;
+    
+    
 
     public JanelaMenu() {
          super();
          botoes = new ArrayList<Botao>();
         //Botão para iniciar acao partida.
-        botoes.add(new Botao("iniciar.png", 10, 50,new BotaoAcaoMudarTela("jogo")));
+        botoes.add(new Botao("iniciar.png", 10, 50,new BAMudarTela(BAMudarTela.JOGO)));
         //Botão para ver acao pontuação
-        botoes.add(new Botao("pontuacao.png", 140, 50,new BotaoAcaoMudarTela("pontuacao")));
+        botoes.add(new Botao("pontuacao.png", 140, 50,new BAMudarTela(BAMudarTela.PONTUACAO)));
         //Botão para ver as regras
-        botoes.add(new Botao("regras.png", 270, 50,new BotaoAcaoMudarTela("regras")));
+        botoes.add(new Botao("regras.png", 270, 50,new BAAbrirArquivo("regras")));
         //Botão para ver as configurações
-        botoes.add(new Botao("configuracoes.png", 400, 50,new BotaoAcaoMudarTela("configuracoes")));
+        botoes.add(new Botao("configuracoes.png", 400, 50,new BAMudarTela(BAMudarTela.CONFIGURACOES)));
         //Botão para sair do jogo
-        botoes.add(new Botao("sair.png", 530, 50,new BotaoAcaoMudarTela("jogo")));
+        botoes.add(new Botao("sair.png", 530, 50,new BASair("jogo")));
         
         fundo = new Image(new Texture("fundo.png"));
         fundo.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(1),Actions.fadeIn(1)));
@@ -62,45 +62,6 @@ public class JanelaMenu extends Janela {
 
     @Override
     public void show() {
-    }
-
-    @Override
-    public void render(float f) {
-        GL20 gl = Gdx.gl;
-        gl.glClearColor(1, 1, 1, 1);
-        gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        camera.update();
-        estagio.act(Gdx.graphics.getDeltaTime());
-
-        estagio.draw();
-        Actor a = null;
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            //Realiza o tratamento das alterações de dimenção da janela
-            camera.unproject(vetor.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-            //hit retorna dentre todos os objetos do estagio aquele que foi clicado
-            a = estagio.hit(vetor.x, vetor.y, true);
-            //Se o usuario clicar na botão inciar acao janela do Jogo.getInstance() é exibida    
-            //qual botão possui a imagem que foi clicada
-            
-        }
-         for (Botao botao : botoes) {       
-            botao.checarClique(a);
-         }
-
-             //Se o usuario clicar na botão inciar acao janela do Jogo é exibida 
-
-//                if (Desktop.isDesktopSupported()) {
-//                    try {
-//                        Desktop.getDesktop().browse(new URI("http://www.xadrezregional.com.br/regrasdm.html"));
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(JanelaMenu.class.getName()).log(Level.SEVERE, null, ex);
-//                    } catch (URISyntaxException ex) {
-//                        Logger.getLogger(JanelaMenu.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-        
-
     }
 
     @Override
@@ -121,6 +82,11 @@ public class JanelaMenu extends Janela {
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    void processa() {
+
     }
 
 }
