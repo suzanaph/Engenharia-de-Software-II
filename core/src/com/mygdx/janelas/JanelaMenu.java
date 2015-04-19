@@ -43,11 +43,11 @@ public class JanelaMenu extends Janela {
         //Botão para iniciar acao partida.
         botoes.add(new Botao("iniciar.png", 10, 50,new BotaoAcaoMudarTela("jogo")));
         //Botão para ver acao pontuação
-        botoes.add(new Botao("pontuacao.png", 140, 50,new BotaoAcaoMudarTela("jogo")));
+        botoes.add(new Botao("pontuacao.png", 140, 50,new BotaoAcaoMudarTela("pontuacao")));
         //Botão para ver as regras
-        botoes.add(new Botao("regras.png", 270, 50,new BotaoAcaoMudarTela("jogo")));
+        botoes.add(new Botao("regras.png", 270, 50,new BotaoAcaoMudarTela("regras")));
         //Botão para ver as configurações
-        botoes.add(new Botao("configuracoes.png", 400, 50,new BotaoAcaoMudarTela("jogo")));
+        botoes.add(new Botao("configuracoes.png", 400, 50,new BotaoAcaoMudarTela("configuracoes")));
         //Botão para sair do jogo
         botoes.add(new Botao("sair.png", 530, 50,new BotaoAcaoMudarTela("jogo")));
         
