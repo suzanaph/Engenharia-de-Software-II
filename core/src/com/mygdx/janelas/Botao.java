@@ -25,21 +25,46 @@ public class Botao {
         this.acao = a;
     };
     public void checarClique(Actor entrada){
-        if(!clicado){
-            if(entrada.equals(imagem)){
+       if(!clicado){
+            if(entrada != null && entrada.equals(imagem)){
                 clicado = true;// marca que o botão foi clicado
                 imagem.addAction(Actions.sequence(
                         Actions.color(Color.GREEN),
                         Actions.delay(0.2f),
-                        Actions.color(Color.RED)
+                        Actions.color(Color.RED),
+                        Actions.delay(0.2f)
                 ));
             }
+        } else if(imagem.getActions().size==0){
+                acao.realizar();
+                clicado = false;
         }
+                
     }
-    public void executar(){
-        if(clicado && imagem.getActions().size==0){
-            acao.realizar();
-            clicado = false;
-        }
+   
+
+    public Actor getImagem() {
+        return imagem;
     }
+
+    public void setImagem(Actor imagem) {
+        this.imagem = imagem;
+    }
+
+    public BotaoAcao getAcao() {
+        return acao;
+    }
+
+    public void setAcao(BotaoAcao acao) {
+        this.acao = acao;
+    }
+
+    public boolean isClicado() {
+        return clicado;
+    }
+
+    public void setClicado(boolean clicado) {
+        this.clicado = clicado;
+    }
+    
 }

@@ -74,21 +74,19 @@ public class JanelaMenu extends Janela {
         estagio.act(Gdx.graphics.getDeltaTime());
 
         estagio.draw();
-
+        Actor a = null;
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             //Realiza o tratamento das alterações de dimenção da janela
             camera.unproject(vetor.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             //hit retorna dentre todos os objetos do estagio aquele que foi clicado
-            Actor a = estagio.hit(vetor.x, vetor.y, true);
+            a = estagio.hit(vetor.x, vetor.y, true);
             //Se o usuario clicar na botão inciar acao janela do Jogo.getInstance() é exibida    
             //qual botão possui a imagem que foi clicada
             
-                for (Botao botao : botoes) {
-                    if (a != null) {
-                        botao.checarClique(a);
-                    }
-                    botao.executar();
-                }
+        }
+         for (Botao botao : botoes) {       
+            botao.checarClique(a);
+         }
 
              //Se o usuario clicar na botão inciar acao janela do Jogo é exibida 
 
@@ -101,7 +99,7 @@ public class JanelaMenu extends Janela {
 //                        Logger.getLogger(JanelaMenu.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
 //                }
-        }
+        
 
     }
 
