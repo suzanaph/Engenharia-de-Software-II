@@ -32,9 +32,9 @@ public class Tabuleiro {
             for (int col = 0; col < largura; col++) {
 
                 if (par(lin) && par(col)) {
-                    cor = Color.BLACK;
+                    cor = Color.RED;
                 } else if (!par(lin) && !par(col)) {
-                    cor = Color.BLACK;
+                    cor = Color.RED;
                 } else {
                     cor = Color.WHITE;
                 }
