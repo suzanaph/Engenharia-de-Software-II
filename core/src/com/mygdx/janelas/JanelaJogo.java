@@ -31,7 +31,7 @@ public class JanelaJogo extends Janela {
         Tabuleiro tabuleiro= Tabuleiro.retornaInstancia();
         tabuleiro.adcionaArea(estagio);
         botoes.add(new Botao("iniciar.png", 700, 50,new BAMudarTela(BAMudarTela.MENU)));
-        estagio.addActor(botoes.get(0).imagem);
+       // estagio.addActor(botoes.get(0).imagem);
     }
 
     @Override
