@@ -5,6 +5,7 @@
  */
 package com.mygdx.janelas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -28,6 +29,7 @@ public class Botao {
        if(!clicado){
             if(entrada != null && entrada.equals(imagem)){
                 clicado = true;// marca que o botão foi clicado
+                Gdx.audio.newSound(Gdx.files.internal("audios/click.wav")).play();
                 imagem.addAction(Actions.sequence(
                         Actions.color(Color.GREEN),
                         Actions.delay(0.2f),

@@ -32,9 +32,9 @@ public class Tabuleiro {
             for (int col = 0; col < largura; col++) {
 
                 if (par(lin) && par(col)) {
-                    cor = Color.RED;
+                    cor = Color.BLACK;
                 } else if (!par(lin) && !par(col)) {
-                    cor = Color.RED;
+                    cor = Color.BLACK;
                 } else {
                     cor = Color.WHITE;
                 }
@@ -43,14 +43,12 @@ public class Tabuleiro {
                 if (estado.matriz[lin][col] == 1) {
                     if (lin >= 0 && lin <= 2) {
                         posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, true);
-                        posicoes[lin][col].peca.imagem.setColor(Color.CYAN);
-                    }
-                }
-
-                if (estado.matriz[lin][col] == 1) {
-                    if (lin >= 5 && lin <= 7) {
+                        posicoes[lin][col].peca.imagem.setColor(Color.ORANGE);
+                    }else if (lin >= 5 && lin <= 7) {
                         posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, false);
-                     posicoes[lin][col].peca.imagem.setColor(Color.PURPLE);}
+                        posicoes[lin][col].peca.imagem.setColor(Color.TEAL);
+                    }
+                
                 }
             }
 

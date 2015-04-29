@@ -28,7 +28,6 @@ public abstract class Janela implements Screen {
    protected Camera camera; 
    protected Vector3 vetor;
    protected Stage estagio;
-   protected Music music;
    protected List<Botao> botoes;
    protected List<Sound> sons;
    protected Actor fundo;
@@ -45,7 +44,7 @@ public abstract class Janela implements Screen {
    @Override
     public void render(float f) {
         GL20 gl = Gdx.gl;
-        gl.glClearColor(1, 1, 1, 1);
+        gl.glClearColor(0, 0, 0,0);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();

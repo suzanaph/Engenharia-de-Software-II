@@ -26,6 +26,7 @@ public class BAMudarTela extends BotaoAcao {
 
     @Override
     public void realizar() {
+        Jogo.getInstance().getMusica().stop();
         if (arg.equals("jogo")) {
             Jogo.getInstance().setScreen(new JanelaJogo());
         } else if (arg.equals("pontuacao")) {
