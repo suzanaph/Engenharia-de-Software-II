@@ -20,10 +20,12 @@ public class Botao {
     Actor imagem;
     BotaoAcao acao;
     private boolean clicado;
+    private Color original;
     public Botao(String url,int x ,int y,BotaoAcao a){
         this.imagem =  new Image(new Texture(url));
         this.imagem.setPosition(x, y);
         this.acao = a;
+        this.original = imagem.getColor();
     };
     public void checarClique(Actor entrada){
        if(!clicado){
@@ -33,7 +35,7 @@ public class Botao {
                 imagem.addAction(Actions.sequence(
                         Actions.color(Color.GREEN),
                         Actions.delay(0.2f),
-                        Actions.color(Color.RED),
+                        Actions.color(original),
                         Actions.delay(0.2f)
                 ));
             }

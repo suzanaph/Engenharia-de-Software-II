@@ -32,6 +32,9 @@ public class JanelaJogo extends Janela {
         tabuleiro.adcionaArea(estagio);
         botoes.add(new Botao("iniciar.png", 650, 50,new BAMudarTela(BAMudarTela.MENU)));
         estagio.addActor(botoes.get(0).imagem);
+        Jogo.getInstance().setMusica("audios/jogo.ogg");
+        Jogo.getInstance().getMusica().play();
+        Jogo.getInstance().getMusica().setLooping(true);
     }
 
     @Override

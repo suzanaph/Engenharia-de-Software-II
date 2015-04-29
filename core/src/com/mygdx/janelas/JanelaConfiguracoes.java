@@ -5,50 +5,58 @@
  */
 package com.mygdx.janelas;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import java.util.ArrayList;
+
 /**
  *
  * @author fabio
  */
 public class JanelaConfiguracoes extends Janela{
-
+    public JanelaConfiguracoes(){
+        super();
+        
+         botoes = new ArrayList<Botao>();
+        //Botão para iniciar acao partida.
+        botoes.add(new Botao("audio.png", 50, 120,new BAMudarTela(BAMudarTela.MENU)));
+        botoes.add(new Botao("iniciar.png", 650, 20,new BAMudarTela(BAMudarTela.MENU)));
+        fundo = new Image(new Texture("opcoes.png"));
+        fundo.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(1),Actions.fadeIn(1)));
+        estagio.addActor(fundo);
+        for (Botao botao : botoes) {
+            botao.imagem.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(2),Actions.fadeIn(1)));
+            estagio.addActor(botao.imagem);
+        }
+    }
     @Override
     public void show() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void render(float f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void resize(int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void pause() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void resume() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void hide() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void dispose() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     void processa() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
