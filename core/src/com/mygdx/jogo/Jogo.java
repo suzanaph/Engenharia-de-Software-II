@@ -7,15 +7,31 @@ import com.mygdx.janelas.JanelaMenu;
 
 public class Jogo extends Game  {
         private static Jogo instance;
-        private static Music musica;
+        private   Music musica;
+        private   int dificuldade;
+        private  boolean somAtivo;
         public static Jogo getInstance(){
             
             return instance;
         }
-        public Music getMusica(){
+
+    /**
+     * @return the dificuldade
+     */
+    public  int getDificuldade() {
+        return dificuldade;
+    }
+
+    /**
+     * @param aDificuldade the dificuldade to set
+     */
+    public  void setDificuldade(int aDificuldade) {
+        dificuldade = aDificuldade;
+    }
+        public  Music getMusica(){
             return musica;
         }
-        public void setMusica(String url){
+        public  void setMusica(String url){
             musica = Gdx.audio.newMusic(Gdx.files.internal(url));
         }
         public Jogo(){}
@@ -30,4 +46,18 @@ public class Jogo extends Game  {
 	public void render () {
 		super.render();
 	}
+
+    /**
+     * @return the somAtivo
+     */
+    public boolean isSomAtivo() {
+        return somAtivo;
+    }
+
+    /**
+     * @param somAtivo the somAtivo to set
+     */
+    public void setSomAtivo(boolean somAtivo) {
+        this.somAtivo = somAtivo;
+    }
 }
