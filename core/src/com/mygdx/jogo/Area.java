@@ -23,6 +23,7 @@ public class Area {
     static int ALTURA = 75;
     String diretorio = "area.png";
     int rotulo;
+    
     Area(int x, int y, Color cor) {
         this.imagem = new Image(new Texture(diretorio));
         imagem.setPosition(x, y);

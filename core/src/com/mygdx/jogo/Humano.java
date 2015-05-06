@@ -23,12 +23,12 @@ public class Humano extends Jogador {
         if (a != null) {
             if (a.peca != null) {// fazer algo para isso executar uma unica vez
                 if (getPecas().contains(a.peca)) {
-                    if(getSelAreaPeca()!=null){
+                    if(getSelAreaPeca()!=null && getSelAreaPeca().peca!= null){
                         getSelAreaPeca().peca.imagem.setColor(getSelAreaPeca().peca.getColorOriginal());
                         ocultarVizinhos();
                     }
                     setSelAreaPeca(a);
-                    setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().vizinhos(a,getQtdJogadas()));
+                    setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().vizinhos(a,a.peca,getQtdJogadas(),0));
                     if(getVizinhosSelAreaPeca().size()==0 && getQtdJogadas()>0)
                         return true;
                     getSelAreaPeca().peca.imagem.setColor(Color.RED);

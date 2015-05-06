@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class Jogador {
 
     private boolean turno;
-    
+
     public abstract boolean update(Actor entrada, Stage estagio);
     private List<Peca> pecas;
     private Area selAreaPeca;
@@ -33,11 +33,17 @@ public abstract class Jogador {
     }
 
     public void exibirVizinhos() {
-        for (Area vizinho : vizinhosSelAreaPeca) {
-            if (vizinho.peca == null) {
+        for (int i = 0; i < vizinhosSelAreaPeca.size(); i++) {
+            if(i<4){
+             Area vizinho = vizinhosSelAreaPeca.get(i);
+             if (vizinho.peca == null) {
                 vizinho.imagem.setColor(Color.GREEN);
-            }
+             }
+            
         }
+        }
+       
+
     }
 
     public void ocultarVizinhos() {
@@ -45,7 +51,7 @@ public abstract class Jogador {
             vizinho.imagem.setColor(Color.BLACK);
         }
     }
-   
+
     /**
      * @return the turno
      */
@@ -119,29 +125,29 @@ public abstract class Jogador {
 
     public boolean moverPeca(Stage estagio) {
         if (selAreaPeca != null && selAreaVazia != null) {
-           
-            boolean retorno=true;
-            Area t =  selAreaVazia;
+
+            boolean retorno = true;
+            Area t = selAreaVazia;
             Peca p = selAreaPeca.peca;
-            p.imagem.addAction(Actions.sequence( Actions.moveTo(t.imagem.getX(), t.imagem.getY(), 0.5f)));
+            p.imagem.addAction(Actions.sequence(Actions.moveTo(t.imagem.getX(), t.imagem.getY(), 0.5f)));
             t.peca = p;
             t.peca.imagem.setColor(p.getColorOriginal());
-            
+
             for (Area vizinho : vizinhosSelAreaPeca) {
-                if(!vizinho.equals(t) && vizinho.rotulo== t.rotulo){
+                if (!vizinho.equals(t) && vizinho.rotulo == t.rotulo) {
                     estagio.getActors().removeValue(vizinho.peca.imagem, true);
                     vizinho.peca = null;
                     retorno = false;
-                    vizinho.rotulo=0;
+                    vizinho.rotulo = 0;
                 }
             }
             selAreaPeca.peca = null;
             selAreaPeca = null;
             selAreaVazia = null;
-            t.rotulo=0;
+            t.rotulo = 0;
             ocultarVizinhos();
             this.vizinhosSelAreaPeca = null;
-            setQtdJogadas(qtdJogadas+1);
+            setQtdJogadas(qtdJogadas + 1);
             return retorno;
         }
         return false;
@@ -160,5 +166,5 @@ public abstract class Jogador {
     public void setQtdJogadas(int qtdJogadas) {
         this.qtdJogadas = qtdJogadas;
     }
-  
+
 }

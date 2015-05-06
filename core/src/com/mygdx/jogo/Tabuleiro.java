@@ -17,11 +17,12 @@ import java.util.List;
  * @author manue_000
  */
 public class Tabuleiro {
-    public final static int DSE =1;//diagonal superior esquerda
-    public final static int DSD=2;//diagonal superior direita
-    public final static int DIE=3;//diagonal inferior esquerda
-    public final static int DID=4;//diagonal inferior direita
-    
+
+    public final static int DSE = 1;//diagonal superior esquerda
+    public final static int DSD = 2;//diagonal superior direita
+    public final static int DIE = 3;//diagonal inferior esquerda
+    public final static int DID = 4;//diagonal inferior direita
+
     private static Tabuleiro instancia;
     int largura = 8;
     int altura = 8;
@@ -77,22 +78,56 @@ public class Tabuleiro {
         return null;
     }
 
-    public List<Area> vizinhos(Area entrada, int qtd) {
-        List<Area> saida = new ArrayList<Area>();
+    public List<Area> vizinhos(Area entrada,Peca p, int qtd , int origem) {
+        List<List<Area>> saidas = new ArrayList<List<Area>>();
+
         int lin = entrada.getPosicaoMatriz()[0];
         int col = entrada.getPosicaoMatriz()[1];
-        Peca p = entrada.peca;
-        if (p.getColorOriginal().equals(Jogo.COLORJOGADOR2)||qtd>0) {// qtd > 0 é pra comer pra tras
-            chacaVizinhos(lin,col,DSE,saida,p,qtd);
-            chacaVizinhos(lin,col,DSD,saida,p,qtd);
+        
+        if (p.getColorOriginal().equals(Jogo.COLORJOGADOR2) || qtd > 0) {// qtd > 0 é pra comer pra tras
+            if(origem != DID)
+            saidas.add(chacaVizinhos(lin, col, DSE, p, qtd));
+            if(origem != DIE)
+            saidas.add(chacaVizinhos(lin, col, DSD, p, qtd));
+             if(origem != DSD)
+            saidas.add(chacaVizinhos(lin, col, DIE, p, qtd+1));
+            if(origem != DSE)
+            saidas.add(chacaVizinhos(lin, col, DID, p, qtd+1));
         }
-        if(p.getColorOriginal().equals(Jogo.COLORJOGADOR1)||qtd>0){
-            chacaVizinhos(lin,col,DIE,saida,p,qtd);
-            chacaVizinhos(lin,col,DID,saida,p,qtd);
+        if (p.getColorOriginal().equals(Jogo.COLORJOGADOR1) || qtd > 0) {
+            if(origem != DID)
+            saidas.add(chacaVizinhos(lin, col, DSE, p, qtd+1));
+            if(origem != DIE)
+            saidas.add(chacaVizinhos(lin, col, DSD, p, qtd+1));
+            if(origem != DSD)
+            saidas.add(chacaVizinhos(lin, col, DIE, p, qtd));
+            if(origem != DSE)
+            saidas.add(chacaVizinhos(lin, col, DID, p, qtd));
         }
-        return saida;
+        List<Area> maior = null;
+        int tamanho = 0;
+        for (List<Area> s : saidas) {
+            if (s != null && s.size() > tamanho) {
+                maior = s;
+                tamanho = s.size();
+            }
+        }
+        System.out.println("tamanho "+ tamanho);
+        List<Area> soma = new ArrayList<Area>();
+        for (List<Area> s : saidas) {
+            if (s != null && s.size() == tamanho) {
+                if(tamanho==1){
+                    soma.add(s.get(0));
+                }else if(tamanho>=2){
+                     soma.add(0,s.get(0));
+                      soma.add(soma.size()-1,s.get(1));// faz com que as primeiras posições sejam as casas disponiveis
+                }
+            }
+        }
+        System.out.println("tamanho "+ soma.size());
+        return soma;
     }
-    
+
     public boolean par(int numero) {
         return numero % 2 == 0;
 
@@ -106,7 +141,7 @@ public class Tabuleiro {
     }
 
     public void adcionaArea(Stage estagio) {
-       
+
         for (int i = 0; i < posicoes.length; i++) {
             for (int j = 0; j < posicoes.length; j++) {
                 estagio.addActor(posicoes[i][j].imagem);
@@ -125,57 +160,58 @@ public class Tabuleiro {
 
     }
 
-   
-
-    private void chacaVizinhos(int lin, int col, int direcao, List<Area> saida,Peca p,int qtd) {
+    private List<Area> chacaVizinhos(int lin, int col, int direcao, Peca p, int qtd) {
+        List<Area> saida = new ArrayList<Area>();
         int linAjuste = 0;
         int linLimite = 0;
-        int colAjuste=0;
-        int colLimite=0;
-        switch(direcao){
+        int colAjuste = 0;
+        int colLimite = 0;
+        switch (direcao) {
             case Tabuleiro.DSE:
-                linAjuste=-1;
-                linLimite=-1;
-                colAjuste=-1;
-                colLimite=-1;
+                linAjuste = -1;
+                linLimite = -1;
+                colAjuste = -1;
+                colLimite = -1;
                 break;
             case Tabuleiro.DSD:
-                linAjuste=-1;
-                linLimite=-1;
-                colAjuste=+1;
-                colLimite=posicoes[0].length;
+                linAjuste = -1;
+                linLimite = -1;
+                colAjuste = +1;
+                colLimite = posicoes[0].length;
                 break;
             case Tabuleiro.DIE:
-                linAjuste=+1;
-                linLimite=posicoes.length;
-                colAjuste=-1;
-                colLimite=-1;
+                linAjuste = +1;
+                linLimite = posicoes.length;
+                colAjuste = -1;
+                colLimite = -1;
                 break;
             case Tabuleiro.DID:
-                linAjuste=+1;
-                linLimite=posicoes.length;
-                colAjuste=+1;
-                colLimite=posicoes[0].length;
+                linAjuste = +1;
+                linLimite = posicoes.length;
+                colAjuste = +1;
+                colLimite = posicoes[0].length;
                 break;
         }
-         if (lin + linAjuste !=  linLimite && col + colAjuste != colLimite) {
-                if(posicoes[lin + linAjuste][col + colAjuste].peca == null ){
-                    if(qtd==0){
+        if (lin + linAjuste != linLimite && col + colAjuste != colLimite) {
+            if (posicoes[lin + linAjuste][col + colAjuste].peca == null) {
+                if (qtd == 0) {
                     saida.add(posicoes[lin + linAjuste][col + colAjuste]);
-                    posicoes[lin + linAjuste][col + colAjuste].rotulo=direcao;
-                    }
-                }else if ( !posicoes[lin + linAjuste][col + colAjuste].peca.getColorOriginal().equals(p.getColorOriginal())) {
-               
-                     if (lin + linAjuste*2 !=  linLimite && col +colAjuste*2 != colLimite) {
-                        if (posicoes[lin + linAjuste*2][col +colAjuste*2].peca == null) {
-                            saida.add(posicoes[lin + linAjuste][col + colAjuste]);
-                            posicoes[lin + linAjuste][col + colAjuste].rotulo=direcao;
-                            saida.add(posicoes[lin + linAjuste*2][col +colAjuste*2]);
-                            posicoes[lin + linAjuste*2][col +colAjuste*2].rotulo =direcao;
-                        }
+                    posicoes[lin + linAjuste][col + colAjuste].rotulo = direcao;
+                }
+            } else if (!posicoes[lin + linAjuste][col + colAjuste].peca.getColorOriginal().equals(p.getColorOriginal())) {
+
+                if (lin + linAjuste * 2 != linLimite && col + colAjuste * 2 != colLimite) {
+                    if (posicoes[lin + linAjuste * 2][col + colAjuste * 2].peca == null) {
+                        saida.add(posicoes[lin + linAjuste][col + colAjuste]);
+                        posicoes[lin + linAjuste][col + colAjuste].rotulo = direcao;
+                        saida.add(posicoes[lin + linAjuste * 2][col + colAjuste * 2]);
+                        posicoes[lin + linAjuste * 2][col + colAjuste * 2].rotulo = direcao;
+                        saida.addAll(vizinhos(posicoes[lin + linAjuste * 2][col + colAjuste * 2],p, qtd + 1,direcao));
                     }
                 }
             }
+        }
+        return saida;
     }
 
 }
