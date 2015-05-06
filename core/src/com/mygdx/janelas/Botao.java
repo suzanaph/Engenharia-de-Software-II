@@ -27,7 +27,7 @@ public class Botao {
         this.acao = a;
         this.original = imagem.getColor();
     };
-    public void checarClique(Actor entrada){
+    public void foiClicado(Actor entrada){
        if(!clicado){
             if(entrada != null && entrada.equals(imagem)){
                 clicado = true;// marca que o botão foi clicado
@@ -42,6 +42,7 @@ public class Botao {
         } else if(imagem.getActions().size==0){
                 acao.realizar();
                 clicado = false;
+                entrada = null;
         }
                 
     }

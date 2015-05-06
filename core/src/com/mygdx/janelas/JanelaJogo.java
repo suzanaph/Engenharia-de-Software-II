@@ -5,15 +5,9 @@
  */
 package com.mygdx.janelas;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.jogo.Jogo;
 import com.mygdx.jogo.Tabuleiro;
 
@@ -22,16 +16,19 @@ import com.mygdx.jogo.Tabuleiro;
  * @author manue_000
  */
 public class JanelaJogo extends Janela {
-    
+    Actor jogada;
     public JanelaJogo() { 
         super();
-        Actor imagemDeFundo = new Image(new Texture("dama.jpg"));
-        imagemDeFundo.setSize(camera.viewportWidth, camera.viewportHeight);
-        estagio.addActor(imagemDeFundo);
-        Tabuleiro tabuleiro= Tabuleiro.retornaInstancia();
-        tabuleiro.adcionaArea(estagio);
+        fundo = new Image(new Texture("dama.jpg"));
+        fundo.setSize(camera.viewportWidth, camera.viewportHeight);
+        estagio.addActor(fundo);
+       jogada = new Image(new Texture("peca.png"));
+        jogada.setPosition(700, 150);
+        jogada.setColor(Jogo.COLORJOGADOR1);
+        Jogo.getInstance().getTabuleiro().adcionaArea(estagio);
         botoes.add(new Botao("iniciar.png", 650, 50,new BAMudarTela(BAMudarTela.MENU)));
         estagio.addActor(botoes.get(0).imagem);
+        estagio.addActor(jogada);
         Jogo.getInstance().setMusica("audios/jogo.ogg");
         Jogo.getInstance().getMusica().play();
         Jogo.getInstance().getMusica().setLooping(true);
@@ -63,6 +60,21 @@ public class JanelaJogo extends Janela {
 
     @Override
     void processa() {
+       if(Jogo.getInstance().getJogador1().isTurno()){
+            if(clicado != null && Jogo.getInstance().getJogador1().update(clicado,estagio)){
+                Jogo.getInstance().getJogador1().setTurno(false);
+                 Jogo.getInstance().getJogador1().setQtdJogadas(0);
+                Jogo.getInstance().getJogador2().setTurno(true);
+                jogada.setColor(Jogo.COLORJOGADOR2);
+            }
+       }else if(Jogo.getInstance().getJogador2().isTurno()){
+            if(clicado != null && Jogo.getInstance().getJogador2().update(clicado,estagio)){
+                 Jogo.getInstance().getJogador2().setTurno(false);
+                 Jogo.getInstance().getJogador2().setQtdJogadas(0);
+                 Jogo.getInstance().getJogador1().setTurno(true);
+                 jogada.setColor(Jogo.COLORJOGADOR1);
+            }
+       }
     }
 
 }

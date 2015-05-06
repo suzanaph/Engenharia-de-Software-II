@@ -6,8 +6,10 @@
 package com.mygdx.jogo;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,7 +17,11 @@ import java.util.List;
  * @author manue_000
  */
 public class Tabuleiro {
-
+    public final static int DSE =1;//diagonal superior esquerda
+    public final static int DSD=2;//diagonal superior direita
+    public final static int DIE=3;//diagonal inferior esquerda
+    public final static int DID=4;//diagonal inferior direita
+    
     private static Tabuleiro instancia;
     int largura = 8;
     int altura = 8;
@@ -40,21 +46,53 @@ public class Tabuleiro {
                 }
 
                 posicoes[lin][col] = new Area(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, cor);
+                posicoes[lin][col].setPosicaoMatriz(lin, col);
                 if (estado.matriz[lin][col] == 1) {
                     if (lin >= 0 && lin <= 2) {
-                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, true);
-                        posicoes[lin][col].peca.imagem.setColor(Color.ORANGE);
-                    }else if (lin >= 5 && lin <= 7) {
-                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, false);
-                        posicoes[lin][col].peca.imagem.setColor(Color.TEAL);
+                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin);
+                        posicoes[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR1);
+                        posicoes[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR1);
+                        Jogo.getInstance().getJogador1().getPecas().add(posicoes[lin][col].peca);
+                    } else if (lin >= 5 && lin <= 7) {
+                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin);
+                        posicoes[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR2);
+                        posicoes[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR2);
+                        Jogo.getInstance().getJogador2().getPecas().add(posicoes[lin][col].peca);
                     }
-                
+
                 }
             }
-
         }
+
     }
 
+    public Area getArea(Actor entrada) {
+        for (int i = 0; i < posicoes.length; i++) {
+            for (int j = 0; j < posicoes[i].length; j++) {
+                if (posicoes[i][j].imagem.equals(entrada) || (posicoes[i][j].peca != null && posicoes[i][j].peca.imagem.equals(entrada))) {
+                    return posicoes[i][j];
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<Area> vizinhos(Area entrada, int qtd) {
+        List<Area> saida = new ArrayList<Area>();
+        int lin = entrada.getPosicaoMatriz()[0];
+        int col = entrada.getPosicaoMatriz()[1];
+        Peca p = entrada.peca;
+        if (p.getColorOriginal().equals(Jogo.COLORJOGADOR2)||qtd>0) {// qtd > 0 é pra comer pra tras
+            chacaVizinhos(lin,col,DSE,saida,p,qtd);
+            chacaVizinhos(lin,col,DSD,saida,p,qtd);
+        }
+        if(p.getColorOriginal().equals(Jogo.COLORJOGADOR1)||qtd>0){
+            chacaVizinhos(lin,col,DIE,saida,p,qtd);
+            chacaVizinhos(lin,col,DID,saida,p,qtd);
+        }
+        return saida;
+    }
+    
     public boolean par(int numero) {
         return numero % 2 == 0;
 
@@ -68,7 +106,7 @@ public class Tabuleiro {
     }
 
     public void adcionaArea(Stage estagio) {
-
+       
         for (int i = 0; i < posicoes.length; i++) {
             for (int j = 0; j < posicoes.length; j++) {
                 estagio.addActor(posicoes[i][j].imagem);
@@ -76,9 +114,68 @@ public class Tabuleiro {
                     estagio.addActor(posicoes[i][j].peca.imagem);
                 }
             }
-
+        }
+        for (int i = 0; i < posicoes.length; i++) {
+            for (int j = 0; j < posicoes.length; j++) {
+                if (posicoes[i][j].peca != null) {
+                    estagio.addActor(posicoes[i][j].peca.imagem);
+                }
+            }
         }
 
+    }
+
+   
+
+    private void chacaVizinhos(int lin, int col, int direcao, List<Area> saida,Peca p,int qtd) {
+        int linAjuste = 0;
+        int linLimite = 0;
+        int colAjuste=0;
+        int colLimite=0;
+        switch(direcao){
+            case Tabuleiro.DSE:
+                linAjuste=-1;
+                linLimite=-1;
+                colAjuste=-1;
+                colLimite=-1;
+                break;
+            case Tabuleiro.DSD:
+                linAjuste=-1;
+                linLimite=-1;
+                colAjuste=+1;
+                colLimite=posicoes[0].length;
+                break;
+            case Tabuleiro.DIE:
+                linAjuste=+1;
+                linLimite=posicoes.length;
+                colAjuste=-1;
+                colLimite=-1;
+                break;
+            case Tabuleiro.DID:
+                linAjuste=+1;
+                linLimite=posicoes.length;
+                colAjuste=+1;
+                colLimite=posicoes[0].length;
+                break;
+        }
+         if (lin + linAjuste !=  linLimite && col + colAjuste != colLimite) {
+                if(posicoes[lin + linAjuste][col + colAjuste].peca == null ){
+                    if(qtd==0){
+                    saida.add(posicoes[lin + linAjuste][col + colAjuste]);
+                    posicoes[lin + linAjuste][col + colAjuste].rotulo=direcao;
+                    }
+                }else if ( !posicoes[lin + linAjuste][col + colAjuste].peca.getColorOriginal().equals(p.getColorOriginal())) {
+               
+                     if (lin + linAjuste*2 !=  linLimite && col +colAjuste*2 != colLimite) {
+                        if (posicoes[lin + linAjuste*2][col +colAjuste*2].peca == null) {
+                            saida.add(posicoes[lin + linAjuste][col + colAjuste]);
+                            posicoes[lin + linAjuste][col + colAjuste].rotulo=direcao;
+                            saida.add(posicoes[lin + linAjuste*2][col +colAjuste*2]);
+                            posicoes[lin + linAjuste*2][col +colAjuste*2].rotulo =direcao;
+                        }
+                    }
+                }
+            }
     }
 
 }

@@ -16,16 +16,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 public class Area {
 
-    int[][] posicaon = new int[1][2];
+    int[] posicao = new int[2];
     Peca peca;
     Actor imagem;
     static int LARGURA = 75;
     static int ALTURA = 75;
     String diretorio = "area.png";
-
+    int rotulo;
     Area(int x, int y, Color cor) {
         this.imagem = new Image(new Texture(diretorio));
         imagem.setPosition(x, y);
         this.imagem.setColor(cor);
+    }
+    public void setPosicaoMatriz(int lin,int col){
+        posicao[0] = lin;
+        posicao[1] = col;
+    }
+     public int[] getPosicaoMatriz(){
+        return posicao;
     }
 }
