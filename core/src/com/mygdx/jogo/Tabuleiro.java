@@ -29,15 +29,15 @@ public class Tabuleiro {
     int posX;
     int posY;
     Estado estado = new Estado();
-    Area[][] posicoes; //Matriz que controla as posições do tabuleiro
+    Casa[][] matrizCasas; //Matriz que controla as posições do tabuleiro
 
     private Tabuleiro() {
-        posicoes = new Area[altura][largura];
+        matrizCasas = new Casa[altura][largura];
         Color cor = Color.WHITE;
         for (int lin = 0; lin < altura; lin++) {
 
             for (int col = 0; col < largura; col++) {
-
+            //Define uma cor para uma casa de acorda com sua posição na matriz
                 if (par(lin) && par(col)) {
                     cor = Color.BLACK;
                 } else if (!par(lin) && !par(col)) {
@@ -45,20 +45,21 @@ public class Tabuleiro {
                 } else {
                     cor = Color.WHITE;
                 }
-
-                posicoes[lin][col] = new Area(posX + Area.LARGURA * col, posY + Area.ALTURA * lin, cor);
-                posicoes[lin][col].setPosicaoMatriz(lin, col);
+                //Configura a posição de cada casa de acordo com suas dimesões e ordem  
+                matrizCasas[lin][col] = new Casa(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin, cor);
+               //Salva as posições da matriz na casa.
+                matrizCasas[lin][col].setPosicaoMatriz(lin, col);
                 if (estado.matriz[lin][col] == 1) {
-                    if (lin >= 0 && lin <= 2) {
-                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin);
-                        posicoes[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR1);
-                        posicoes[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR1);
-                        Jogo.getInstance().getJogador1().getPecas().add(posicoes[lin][col].peca);
-                    } else if (lin >= 5 && lin <= 7) {
-                        posicoes[lin][col].peca = new Peca(posX + Area.LARGURA * col, posY + Area.ALTURA * lin);
-                        posicoes[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR2);
-                        posicoes[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR2);
-                        Jogo.getInstance().getJogador2().getPecas().add(posicoes[lin][col].peca);
+                    if (lin >= 0 && lin <= 2) {//Adiciona peças nas três primeiras linhas do tabuleiro.
+                        matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
+                        matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR1);
+                        matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR1);//lol isso deve estar dentro de peca !!
+                        Jogo.getInstance().getJogador1().getPecas().add(matrizCasas[lin][col].peca);
+                    } else if (lin >= 5 && lin <= 7) {//Adiciona peças nas três últimas linhas do tabuleiro.
+                        matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
+                        matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR2);
+                        matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR2);
+                        Jogo.getInstance().getJogador2().getPecas().add(matrizCasas[lin][col].peca);
                     }
 
                 }
@@ -66,55 +67,55 @@ public class Tabuleiro {
         }
 
     }
-
-    public Area getArea(Actor entrada) {
-        for (int i = 0; i < posicoes.length; i++) {
-            for (int j = 0; j < posicoes[i].length; j++) {
-                if (posicoes[i][j].imagem.equals(entrada) || (posicoes[i][j].peca != null && posicoes[i][j].peca.imagem.equals(entrada))) {
-                    return posicoes[i][j];
+  //Retorna dada uma imagem , retorna a casa correspondente.
+    public Casa getArea(Actor entrada) {
+        for (int i = 0; i < matrizCasas.length; i++) {
+            for (int j = 0; j < matrizCasas[i].length; j++) {
+                if (matrizCasas[i][j].imagem.equals(entrada) || (matrizCasas[i][j].peca != null && matrizCasas[i][j].peca.imagem.equals(entrada))) {
+                    return matrizCasas[i][j];
                 }
             }
         }
         return null;
     }
 
-    public List<Area> vizinhos(Area entrada,Peca p, int qtd , int origem) {
-        List<List<Area>> saidas = new ArrayList<List<Area>>();
+    public List<Casa> vizinhos(Casa casa,Peca peca, int qtd , int origem) {
+        List<List<Casa>> saidas = new ArrayList<List<Casa>>();
 
-        int lin = entrada.getPosicaoMatriz()[0];
-        int col = entrada.getPosicaoMatriz()[1];
+        int lin = casa.getPosicaoMatriz()[0];
+        int col = casa.getPosicaoMatriz()[1];
         
-        if (p.getColorOriginal().equals(Jogo.COLORJOGADOR2) || qtd > 0) {// qtd > 0 é pra comer pra tras
+        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR2) || qtd > 0) {// qtd > 0 é pra comer pra tras
             if(origem != DID)
-            saidas.add(chacaVizinhos(lin, col, DSE, p, qtd));
+            saidas.add(chacaVizinhos(lin, col, DSE, peca, qtd));
             if(origem != DIE)
-            saidas.add(chacaVizinhos(lin, col, DSD, p, qtd));
+            saidas.add(chacaVizinhos(lin, col, DSD, peca, qtd));
              if(origem != DSD)
-            saidas.add(chacaVizinhos(lin, col, DIE, p, qtd+1));
+            saidas.add(chacaVizinhos(lin, col, DIE, peca, qtd+1));
             if(origem != DSE)
-            saidas.add(chacaVizinhos(lin, col, DID, p, qtd+1));
+            saidas.add(chacaVizinhos(lin, col, DID, peca, qtd+1));
         }
-        if (p.getColorOriginal().equals(Jogo.COLORJOGADOR1) || qtd > 0) {
+        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR1) || qtd > 0) {
             if(origem != DID)
-            saidas.add(chacaVizinhos(lin, col, DSE, p, qtd+1));
+            saidas.add(chacaVizinhos(lin, col, DSE, peca, qtd+1));
             if(origem != DIE)
-            saidas.add(chacaVizinhos(lin, col, DSD, p, qtd+1));
+            saidas.add(chacaVizinhos(lin, col, DSD, peca, qtd+1));
             if(origem != DSD)
-            saidas.add(chacaVizinhos(lin, col, DIE, p, qtd));
+            saidas.add(chacaVizinhos(lin, col, DIE, peca, qtd));
             if(origem != DSE)
-            saidas.add(chacaVizinhos(lin, col, DID, p, qtd));
+            saidas.add(chacaVizinhos(lin, col, DID, peca, qtd));
         }
-        List<Area> maior = null;
+        List<Casa> maior = null;
         int tamanho = 0;
-        for (List<Area> s : saidas) {
+        for (List<Casa> s : saidas) {
             if (s != null && s.size() > tamanho) {
                 maior = s;
                 tamanho = s.size();
             }
         }
         System.out.println("tamanho "+ tamanho);
-        List<Area> soma = new ArrayList<Area>();
-        for (List<Area> s : saidas) {
+        List<Casa> soma = new ArrayList<Casa>();
+        for (List<Casa> s : saidas) {
             if (s != null && s.size() == tamanho) {
                 if(tamanho==1){
                     soma.add(s.get(0));
@@ -142,26 +143,26 @@ public class Tabuleiro {
 
     public void adcionaArea(Stage estagio) {
 
-        for (int i = 0; i < posicoes.length; i++) {
-            for (int j = 0; j < posicoes.length; j++) {
-                estagio.addActor(posicoes[i][j].imagem);
-                if (posicoes[i][j].peca != null) {
-                    estagio.addActor(posicoes[i][j].peca.imagem);
+        for (int i = 0; i < matrizCasas.length; i++) {
+            for (int j = 0; j < matrizCasas.length; j++) {
+                estagio.addActor(matrizCasas[i][j].imagem);
+                if (matrizCasas[i][j].peca != null) {
+                    estagio.addActor(matrizCasas[i][j].peca.imagem);
                 }
             }
         }
-        for (int i = 0; i < posicoes.length; i++) {
-            for (int j = 0; j < posicoes.length; j++) {
-                if (posicoes[i][j].peca != null) {
-                    estagio.addActor(posicoes[i][j].peca.imagem);
+        for (int i = 0; i < matrizCasas.length; i++) {
+            for (int j = 0; j < matrizCasas.length; j++) {
+                if (matrizCasas[i][j].peca != null) {
+                    estagio.addActor(matrizCasas[i][j].peca.imagem);
                 }
             }
         }
 
     }
 
-    private List<Area> chacaVizinhos(int lin, int col, int direcao, Peca p, int qtd) {
-        List<Area> saida = new ArrayList<Area>();
+    private List<Casa> chacaVizinhos(int lin, int col, int direcao, Peca peca, int qtd) {
+        List<Casa> saida = new ArrayList<Casa>();
         int linAjuste = 0;
         int linLimite = 0;
         int colAjuste = 0;
@@ -177,36 +178,36 @@ public class Tabuleiro {
                 linAjuste = -1;
                 linLimite = -1;
                 colAjuste = +1;
-                colLimite = posicoes[0].length;
+                colLimite = matrizCasas[0].length;
                 break;
             case Tabuleiro.DIE:
                 linAjuste = +1;
-                linLimite = posicoes.length;
+                linLimite = matrizCasas.length;
                 colAjuste = -1;
                 colLimite = -1;
                 break;
             case Tabuleiro.DID:
                 linAjuste = +1;
-                linLimite = posicoes.length;
+                linLimite = matrizCasas.length;
                 colAjuste = +1;
-                colLimite = posicoes[0].length;
+                colLimite = matrizCasas[0].length;
                 break;
         }
         if (lin + linAjuste != linLimite && col + colAjuste != colLimite) {
-            if (posicoes[lin + linAjuste][col + colAjuste].peca == null) {
+            if (matrizCasas[lin + linAjuste][col + colAjuste].peca == null) {
                 if (qtd == 0) {
-                    saida.add(posicoes[lin + linAjuste][col + colAjuste]);
-                    posicoes[lin + linAjuste][col + colAjuste].rotulo = direcao;
+                    saida.add(matrizCasas[lin + linAjuste][col + colAjuste]);
+                    matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
                 }
-            } else if (!posicoes[lin + linAjuste][col + colAjuste].peca.getColorOriginal().equals(p.getColorOriginal())) {
+            } else if (!matrizCasas[lin + linAjuste][col + colAjuste].peca.getColorOriginal().equals(peca.getColorOriginal())) {
 
                 if (lin + linAjuste * 2 != linLimite && col + colAjuste * 2 != colLimite) {
-                    if (posicoes[lin + linAjuste * 2][col + colAjuste * 2].peca == null) {
-                        saida.add(posicoes[lin + linAjuste][col + colAjuste]);
-                        posicoes[lin + linAjuste][col + colAjuste].rotulo = direcao;
-                        saida.add(posicoes[lin + linAjuste * 2][col + colAjuste * 2]);
-                        posicoes[lin + linAjuste * 2][col + colAjuste * 2].rotulo = direcao;
-                        saida.addAll(vizinhos(posicoes[lin + linAjuste * 2][col + colAjuste * 2],p, qtd + 1,direcao));
+                    if (matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].peca == null) {
+                        saida.add(matrizCasas[lin + linAjuste][col + colAjuste]);
+                        matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
+                        saida.add(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2]);
+                        matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].rotulo = direcao;
+                        saida.addAll(vizinhos(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2],peca, qtd + 1,direcao));
                     }
                 }
             }

@@ -19,7 +19,7 @@ public class Humano extends Jogador {
     @Override
     public boolean update(Actor entrada,Stage estagio) {
        
-        Area a = Jogo.getInstance().getTabuleiro().getArea(entrada);
+        Casa a = Jogo.getInstance().getTabuleiro().getArea(entrada);
         if (a != null) {
             if (a.peca != null) {// fazer algo para isso executar uma unica vez
                 if (getPecas().contains(a.peca)) {

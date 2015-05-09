@@ -22,20 +22,20 @@ public abstract class Jogador {
 
     public abstract boolean update(Actor entrada, Stage estagio);
     private List<Peca> pecas;
-    private Area selAreaPeca;
-    private Area selAreaVazia;
-    private List<Area> vizinhosSelAreaPeca;
+    private Casa selAreaPeca;
+    private Casa selAreaVazia;
+    private List<Casa> vizinhosSelAreaPeca;
     private int qtdJogadas;
 
     public Jogador() {
         pecas = new ArrayList<Peca>();
-        vizinhosSelAreaPeca = new ArrayList<Area>();
+        vizinhosSelAreaPeca = new ArrayList<Casa>();
     }
 
     public void exibirVizinhos() {
         for (int i = 0; i < vizinhosSelAreaPeca.size(); i++) {
             if(i<4){
-             Area vizinho = vizinhosSelAreaPeca.get(i);
+             Casa vizinho = vizinhosSelAreaPeca.get(i);
              if (vizinho.peca == null) {
                 vizinho.imagem.setColor(Color.GREEN);
              }
@@ -47,7 +47,7 @@ public abstract class Jogador {
     }
 
     public void ocultarVizinhos() {
-        for (Area vizinho : vizinhosSelAreaPeca) {
+        for (Casa vizinho : vizinhosSelAreaPeca) {
             vizinho.imagem.setColor(Color.BLACK);
         }
     }
@@ -83,14 +83,14 @@ public abstract class Jogador {
     /**
      * @return the selAreaPeca
      */
-    public Area getSelAreaPeca() {
+    public Casa getSelAreaPeca() {
         return selAreaPeca;
     }
 
     /**
      * @param selPeca the selAreaPeca to set
      */
-    public void setSelAreaPeca(Area selAreaPeca) {
+    public void setSelAreaPeca(Casa selAreaPeca) {
         this.selAreaPeca = selAreaPeca;
 
     }
@@ -98,28 +98,28 @@ public abstract class Jogador {
     /**
      * @return the selAreaVazia
      */
-    public Area getSelAreaVazia() {
+    public Casa getSelAreaVazia() {
         return selAreaVazia;
     }
 
     /**
      * @param selArea the selAreaVazia to set
      */
-    public void setSelAreaVazia(Area selAreaVazia) {
+    public void setSelAreaVazia(Casa selAreaVazia) {
         this.selAreaVazia = selAreaVazia;
     }
 
     /**
      * @return the vizinhosSelAreaPeca
      */
-    public List<Area> getVizinhosSelAreaPeca() {
+    public List<Casa> getVizinhosSelAreaPeca() {
         return vizinhosSelAreaPeca;
     }
 
     /**
      * @param vizinhosSelAreaPeca the vizinhosSelAreaPeca to set
      */
-    public void setVizinhosSelAreaPeca(List<Area> vizinhosSelAreaPeca) {
+    public void setVizinhosSelAreaPeca(List<Casa> vizinhosSelAreaPeca) {
         this.vizinhosSelAreaPeca = vizinhosSelAreaPeca;
     }
 
@@ -127,13 +127,13 @@ public abstract class Jogador {
         if (selAreaPeca != null && selAreaVazia != null) {
 
             boolean retorno = true;
-            Area t = selAreaVazia;
+            Casa t = selAreaVazia;
             Peca p = selAreaPeca.peca;
             p.imagem.addAction(Actions.sequence(Actions.moveTo(t.imagem.getX(), t.imagem.getY(), 0.5f)));
             t.peca = p;
             t.peca.imagem.setColor(p.getColorOriginal());
 
-            for (Area vizinho : vizinhosSelAreaPeca) {
+            for (Casa vizinho : vizinhosSelAreaPeca) {
                 if (!vizinho.equals(t) && vizinho.rotulo == t.rotulo) {
                     estagio.getActors().removeValue(vizinho.peca.imagem, true);
                     vizinho.peca = null;
