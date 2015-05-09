@@ -69,7 +69,6 @@ public class Tabuleiro {
     }
 
     //Retorna dada uma imagem , retorna a casa correspondente.
-
     public Casa getArea(Actor entrada) {
         for (int i = 0; i < matrizCasas.length; i++) {
             for (int j = 0; j < matrizCasas[i].length; j++) {
@@ -82,7 +81,6 @@ public class Tabuleiro {
     }
 
     //Retorna casas disponíveis para peca andar
-
     public List<Casa> vizinhos(Casa casa, Peca peca, int qtd, int origem) {
         List<List<Casa>> caminhos = new ArrayList<List<Casa>>();
 
@@ -213,24 +211,24 @@ public class Tabuleiro {
                     caminho.add(matrizCasas[lin + linAjuste][col + colAjuste]);
                     matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
                 }
-              //Verifica se a cor da peça da casa de destino é diferente da peça que o jogador atual que mover.
+                //Verifica se a cor da peça da casa de destino é diferente da peça que o jogador atual que mover.
             } else if (!matrizCasas[lin + linAjuste][col + colAjuste].peca.getColorOriginal().equals(peca.getColorOriginal())) {
-            //   
+                //   
                 //Verifica se o movimento de captura não ultrapassa o limite.
                 if (lin + linAjuste * 2 != linLimite && col + colAjuste * 2 != colLimite) {
-                   
+
                     //Verifica se não existe mais de uma peça consecutiva.
                     if (matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].peca == null) {
-                       //Adiciona todas as casas no cmainho do movimento de captura. 
+                        //Adiciona todas as casas no cmainho do movimento de captura. 
                         //adiciona a casa onde está a peca a ser caputurada
                         caminho.add(matrizCasas[lin + linAjuste][col + colAjuste]);
-                        
+
                         matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
-                        
+
                         caminho.add(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2]);
-                        
+
                         matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].rotulo = direcao;
-                        
+
                         caminho.addAll(vizinhos(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2], peca, qtdCapturas + 1, direcao));
                     }
                 }
