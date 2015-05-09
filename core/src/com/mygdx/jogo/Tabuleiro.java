@@ -87,7 +87,7 @@ public class Tabuleiro {
         int lin = casa.getPosicaoMatriz()[0];
         int col = casa.getPosicaoMatriz()[1];
 
-        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR2) || qtd > 0) {// qtd > 0 é pra comer pra tras
+        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR2)) {// qtd > 0 é pra comer pra tras
 
             if (origem != DID) {
                 caminhos.add(checaVizinhos(lin, col, DSE, peca, qtd));
@@ -102,7 +102,7 @@ public class Tabuleiro {
                 caminhos.add(checaVizinhos(lin, col, DID, peca, qtd + 1));
             }
         }
-        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR1) || qtd > 0) {
+        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR1)) {
             if (origem != DID) {
                 caminhos.add(checaVizinhos(lin, col, DSE, peca, qtd + 1));
             }
@@ -223,12 +223,12 @@ public class Tabuleiro {
                         //adiciona a casa onde está a peca a ser caputurada
                         caminho.add(matrizCasas[lin + linAjuste][col + colAjuste]);
 
-                        matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
-
                         caminho.add(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2]);
-
-                        matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].rotulo = direcao;
-
+                        // marcar qual a primeira peca a ser capturada seguindo da casa original até aquela direção.
+                        if (qtdCapturas == 1) {
+                            matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
+                            matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].rotulo = direcao;
+                        }
                         caminho.addAll(vizinhos(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2], peca, qtdCapturas + 1, direcao));
                     }
                 }
