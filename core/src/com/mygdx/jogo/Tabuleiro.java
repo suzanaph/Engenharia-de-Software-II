@@ -175,7 +175,7 @@ public class Tabuleiro {
     private List<Casa> checaVizinhos(int lin, int col, int direcao, Peca peca, int qtdCapturas) {
         List<Casa> caminho = new ArrayList<Casa>();
         int linAjuste = 0;
-        int linLimite = 0; //Serve para fazer que a peça não sai do tabuleiro.
+        int linLimite = 0; 
         int colAjuste = 0;
         int colLimite = 0;
         switch (direcao) {
