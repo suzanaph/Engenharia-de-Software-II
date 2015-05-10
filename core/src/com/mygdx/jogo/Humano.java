@@ -15,13 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
  * @author fabio
  */
 public class Humano extends Jogador {
-
+    public Casa anterior;
     @Override
     public boolean update(Actor entrada,Stage estagio) {
-       
+        
         Casa a = Jogo.getInstance().getTabuleiro().getArea(entrada);
-        if (a != null) {
-            if (a.peca != null) {// fazer algo para isso executar uma unica vez
+        if (a != null ) {
+         
+            if (a.peca != null && a != anterior) {// fazer algo para isso executar uma unica vez
                 if (getPecas().contains(a.peca)) {
                     if(getSelAreaPeca()!=null && getSelAreaPeca().peca!= null){
                         getSelAreaPeca().peca.imagem.setColor(getSelAreaPeca().peca.getColorOriginal());
@@ -32,7 +33,9 @@ public class Humano extends Jogador {
                     if(getVizinhosSelAreaPeca().size()==0 && getQtdJogadas()>0)
                         return true;
                     getSelAreaPeca().peca.imagem.setColor(Color.RED);
+                    anterior = getSelAreaPeca();
                     exibirVizinhos();
+                    System.out.println("");
                 }
             } else {
                  
