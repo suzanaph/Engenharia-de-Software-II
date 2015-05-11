@@ -82,7 +82,7 @@ public class Jogo extends Game {
     public Tabuleiro getTabuleiro() {
         return tabuleiro;
     }
-
+    
     /**
      * @param tabuleiro the tabuleiro to set
      */

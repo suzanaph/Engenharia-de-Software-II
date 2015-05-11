@@ -49,18 +49,17 @@ public class Tabuleiro {
                 matrizCasas[lin][col] = new Casa(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin, cor);
                 //Salva as posições da matriz na casa.
                 matrizCasas[lin][col].setPosicaoMatriz(lin, col);
-                if (estado.matriz[lin][col] == 1) {
-                    if (lin >= 0 && lin <= 2) {//Adiciona peças nas três primeiras linhas do tabuleiro.
-                        matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
-                        matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR1);
-                        matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR1);//lol isso deve estar dentro de peca !!
-                        Jogo.getInstance().getJogador1().getPecas().add(matrizCasas[lin][col].peca);
-                    } else if (lin >= 5 && lin <= 7) {//Adiciona peças nas três últimas linhas do tabuleiro.
-                        matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
-                        matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR2);
-                        matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR2);
-                        Jogo.getInstance().getJogador2().getPecas().add(matrizCasas[lin][col].peca);
-                    }
+                if (estado.matriz[lin][col] == Estado.PECAJOGADOR1) {
+                    //Adiciona peças nas três primeiras linhas do tabuleiro.
+                    matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
+                    matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR1);
+                    matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR1);//lol isso deve estar dentro de peca !!
+                    Jogo.getInstance().getJogador1().getPecas().add(matrizCasas[lin][col].peca);
+                } else if (estado.matriz[lin][col] == Estado.PECAJOGADOR2) {//Adiciona peças nas três últimas linhas do tabuleiro.
+                    matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
+                    matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR2);
+                    matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR2);
+                    Jogo.getInstance().getJogador2().getPecas().add(matrizCasas[lin][col].peca);
 
                 }
             }
@@ -79,86 +78,48 @@ public class Tabuleiro {
         }
         return null;
     }
-
+    
     //Retorna casas disponíveis para peca andar
-    public List<Casa> vizinhos(Casa casa, Peca peca, int qtd, int origem) {
-        List<List<Casa>> caminhos = new ArrayList<List<Casa>>();
-
-        int lin = casa.getPosicaoMatriz()[0];
-        int col = casa.getPosicaoMatriz()[1];
-        System.out.println("casa selecionada para verifição linha: " + lin + " coluna: " + col);
-        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR2)) {// qtd > 0 é pra comer pra tras
-            System.out.println("peça jogador 2 ");
-            if (origem != DID) {
-                System.out.println("Diagonal  superior esquerda linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DSE, peca, qtd+1));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-            }
-            if (origem != DIE) {
-                System.out.println("Diagonal  superior direita linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DSD, peca, qtd+1));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-
-            }
-            if (origem != DSD) {
-                System.out.println("Diagonal  inferior esquerda linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DIE, peca, qtd ));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-
-            }
-            if (origem != DSE) {
-                System.out.println("Diagonal  inferior direita linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DID, peca, qtd ));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-            }
+    public List<MovimentoEstado> vizinhos(Casa casa,boolean capturado) {
+        List<MovimentoEstado> saida = new ArrayList<MovimentoEstado>();
+        int lin = casa.posicao[0];
+        int col = casa.posicao[1];
+        System.out.println("atual");
+        estado.exibir();
+        List<Estado> estados = estado.movimentosPossiveis(lin, col, capturado);
+        
+        System.out.println("estados: " + estados.size());
+        for (Estado estado1 : estados) {
+            estado1.exibir();
         }
-        if (peca.getColorOriginal().equals(Jogo.COLORJOGADOR1)) {
-            System.out.println("peça jogador 1 ");
-            if (origem != DID) {
-                System.out.println("Diagonal  superior esquerda linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DSE, peca, qtd ));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-            }
-            if (origem != DIE) {
-                System.out.println("Diagonal  superior direita linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DSD, peca, qtd ));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-
-            }
-            if (origem != DSD) {
-                System.out.println("Diagonal  inferior esquerda linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DIE, peca, qtd+1));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-
-            }
-            if (origem != DSE) {
-                System.out.println("Diagonal  inferior direita linha: " + lin + " coluna: " + col);
-                caminhos.add(checaVizinhos(lin, col, DID, peca, qtd+1));
-                System.out.println("foi adicionado ao caminho 1 lista de casas de tamanho : " + caminhos.get(caminhos.size() - 1).size());
-            }
+        estados = estado.melhorCusto(lin, col, estados);
+        System.out.println("melhor percusso: " + estados.size());
+        for (Estado estado1 : estados) {
+            estado1.exibir();
         }
-        List<Casa> maior = null;
-        int tamanho = 0;
-        for (List<Casa> s : caminhos) {
-            if (s != null && s.size() > tamanho) {
-                maior = s;
-                tamanho = s.size();
-            }
+        List<Estado> iniciais = new ArrayList<Estado>();
+        for (Estado est : estados) {
+            iniciais.add(estado.inicial(est));
         }
-
-        List<Casa> soma = new ArrayList<Casa>();
-        for (List<Casa> s : caminhos) {
-            if (s != null && s.size() == tamanho) {
-                if (tamanho == 1) {
-                    soma.add(s.get(0));
-                } else if (tamanho >= 2) {
-                    soma.add(0, s.get(0));
-                    soma.add(soma.size() - 1, s.get(1));// faz com que as primeiras posições sejam as casas disponiveis
+        System.out.println("iniciais:" + iniciais.size());
+        for (Estado inicial : iniciais) {
+            int[][] m = estado.posicoesValidas(lin, col, inicial);
+            inicial.exibir();
+            for (int i = 0; i < m.length; i++) {
+                for (int j = 0; j < m.length; j++) {
+                    if ((i != lin || j != col) && m[i][j] == estado.matriz[lin][col]) {
+                        saida.add(new MovimentoEstado(matrizCasas[i][j],inicial));
+                    }
                 }
             }
         }
-        System.out.println("tamanho " + soma.size());
-        return soma;
+
+        System.out.println("saida:" + saida.size());
+        for (MovimentoEstado s : saida) {
+            System.out.println("lin "+ s.c.posicao[0]+" col: "+s.c.posicao[1]);
+            s.t.exibir();
+        }
+        return saida;
     }
 
     public boolean par(int numero) {
@@ -192,77 +153,17 @@ public class Tabuleiro {
         }
 
     }
-
-    private List<Casa> checaVizinhos(int lin, int col, int direcao, Peca peca, int qtdCapturas) {
-        List<Casa> caminho = new ArrayList<Casa>();
-        int linAjuste = 0;
-        int linLimite = 0;
-        int colAjuste = 0;
-        int colLimite = 0;
-        switch (direcao) {
-            case Tabuleiro.DSE:
-                linAjuste = +1;
-                linLimite = matrizCasas.length;
-                colAjuste = -1;
-                colLimite = -1;
-                break;
-            case Tabuleiro.DSD:
-                linAjuste = +1;
-                linLimite = matrizCasas.length;
-                colAjuste = +1;
-                colLimite = matrizCasas[0].length;
-                break;
-            case Tabuleiro.DIE:
-                linAjuste = -1;
-                linLimite = -1;
-                colAjuste = -1;
-                colLimite = -1;
-                break;
-            case Tabuleiro.DID:
-                linAjuste = -1;
-                linLimite = -1;
-                colAjuste = +1;
-                colLimite = matrizCasas[0].length;
-                break;
-        }
-        System.out.println("qauntidade de jogadas: " + qtdCapturas);
-        if (lin + linAjuste != linLimite && col + colAjuste != colLimite) {//Verifica se a casa destino está dentro dos limites do tabuleiro
-            System.out.println("a casa  linha: " + (lin + linAjuste) + "coluna: " + (col + colAjuste) + " existe");
-            //Verifica se a casa destino está vazia.
-            if (matrizCasas[lin + linAjuste][col + colAjuste].peca == null) {
-                System.out.println("a casa  linha: " + (lin + linAjuste) + "coluna: " + (col + colAjuste) + " não possui peça");
-                if (qtdCapturas == 0) {//Verificas se nenhuma peça foi comida para poder mover para uma casa vazia
-                    caminho.add(matrizCasas[lin + linAjuste][col + colAjuste]);
-                    matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
-                    System.out.println("a casa  linha: " + (lin + linAjuste) + "coluna: " + (col + colAjuste) + " foi adicionada com rotulo " + direcao);
-                }
-                //Verifica se a cor da peça da casa de destino é diferente da peça que o jogador atual que mover.
-            } else if (!matrizCasas[lin + linAjuste][col + colAjuste].peca.getColorOriginal().equals(peca.getColorOriginal())) {
-                System.out.println("a casa  linha: " + (lin + linAjuste) + "coluna: " + (col + colAjuste) + " possui peca");
-                //Verifica se o movimento de captura não ultrapassa o limite.
-                if (lin + linAjuste * 2 != linLimite && col + colAjuste * 2 != colLimite) {
-                    System.out.println("a casa  linha: " + (lin + linAjuste * 2) + "coluna: " + (col + colAjuste * 2) + " existe");
-                    //Verifica se não existe mais de uma peça consecutiva.
-                    if (matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].peca == null) {
-                        System.out.println("a casa  linha: " + (lin + linAjuste * 2) + "coluna: " + (col + colAjuste * 2) + " não possui peca");
-
-                        //Adiciona todas as casas no cmainho do movimento de captura. 
-                        //adiciona a casa onde está a peca a ser caputurada
-                        caminho.add(matrizCasas[lin + linAjuste][col + colAjuste]);
-
-                        caminho.add(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2]);
-                        // marcar qual a primeira peca a ser capturada seguindo da casa original até aquela direção.
-                        matrizCasas[lin + linAjuste][col + colAjuste].rotulo = direcao;
-                        matrizCasas[lin + linAjuste * 2][col + colAjuste * 2].rotulo = direcao;
-                        System.out.println("a casa  linha: " + (lin + linAjuste) + "coluna: " + (col + colAjuste) + " foi adicionada com rotulo " + direcao);
-                        System.out.println("a casa  linha: " + (lin + linAjuste*2) + "coluna: " + (col + colAjuste*2) + " foi adicionada com rotulo " + direcao);
-
-                        caminho.addAll(vizinhos(matrizCasas[lin + linAjuste * 2][col + colAjuste * 2], peca, qtdCapturas + 1, direcao));
-                    }
+    public boolean setEstado(Estado t,Stage estagio ){
+        estado = t;
+         for (int i = 0; i < estado.matriz.length; i++) {
+            for (int j = 0; j < estado.matriz.length; j++) {
+                if (matrizCasas[i][j].peca != null && estado.matriz[i][j]==0) {
+                   estagio.getActors().removeValue(matrizCasas[i][j].peca.imagem,true);
+                   matrizCasas[i][j].peca=null;
+                   return false;
                 }
             }
         }
-        return caminho;
+         return true;
     }
-
 }

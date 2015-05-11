@@ -29,7 +29,7 @@ public class Humano extends Jogador {
                         ocultarVizinhos();
                     }
                     setSelAreaPeca(a);
-                    setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().vizinhos(a,a.peca,getQtdJogadas(),0));
+                    setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().vizinhos(a,getQtdJogadas()>0));
                     if(getVizinhosSelAreaPeca().size()==0 && getQtdJogadas()>0)
                         return true;
                     getSelAreaPeca().peca.imagem.setColor(Color.RED);
@@ -39,11 +39,21 @@ public class Humano extends Jogador {
                 }
             } else {
                  
-                if( getSelAreaPeca()!=null && getVizinhosSelAreaPeca().contains(a) ) {
-                    setSelAreaVazia(a);
+                if( getSelAreaPeca()!=null && casaValida(a) ) {
+             
                     return moverPeca(estagio);
                   
                 }
+            }
+        }
+        return false;
+    }
+
+    private boolean casaValida(Casa a) {
+        for (MovimentoEstado col :getVizinhosSelAreaPeca()) {
+            if(col.c.equals(a)){
+                setSelAreaVazia(col);
+                return true;
             }
         }
         return false;
