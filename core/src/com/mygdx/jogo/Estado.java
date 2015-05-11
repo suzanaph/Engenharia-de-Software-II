@@ -358,7 +358,7 @@ public class Estado {
         }
         return m3;
     }
-
+// utilizado a matriz para verificar a mudança de um estado pra outro
     public int[][] subtracaoMatrizes(int[][] m1, int[][] m2) {
         int[][] m3 = new int[m1.length][m1.length];
         for (int i = 0; i < m1.length; i++) {
@@ -368,6 +368,7 @@ public class Estado {
         }
         return m3;
     }
+    //por questão de teste exibir o estado
     public void exibir(){
         for (int i = 0; i < matriz.length; i++) {
             System.out.println("");

@@ -22,7 +22,7 @@ public class Casa {
     static int LARGURA = 75;
     static int ALTURA = 75;
     String diretorio = "area.png";
-    int rotulo;
+    
     
     Casa(int x, int y, Color cor) {
         this.imagem = new Image(new Texture(diretorio));

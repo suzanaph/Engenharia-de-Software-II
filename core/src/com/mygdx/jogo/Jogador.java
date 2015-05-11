@@ -31,7 +31,7 @@ public abstract class Jogador {
         pecas = new ArrayList<Peca>();
         vizinhosSelAreaPeca = new ArrayList<MovimentoEstado>();
     }
-
+    // muda a cor da casa que jogodor atual pode se mover.
     public void exibirVizinhos() {
         for (int i = 0; i < vizinhosSelAreaPeca.size(); i++) {
 
@@ -39,11 +39,9 @@ public abstract class Jogador {
             if (vizinho.c.peca == null) {
                 vizinho.c.imagem.setColor(Color.GREEN);
             }
-
         }
-
     }
-
+    //ao termino de uma jogada fazer as casas voltarem a sua cor normal
     public void ocultarVizinhos() {
         for (MovimentoEstado vizinho : vizinhosSelAreaPeca) {
             vizinho.c.imagem.setColor(Color.BLACK);
@@ -120,7 +118,7 @@ public abstract class Jogador {
     public void setVizinhosSelAreaPeca(List<MovimentoEstado> vizinhosSelAreaPeca) {
         this.vizinhosSelAreaPeca = vizinhosSelAreaPeca;
     }
-
+//para que a peça seja movida o jogador deve ter selecionado uma peça e uma casa das disponiveis para o movimento.
     public boolean moverPeca(Stage estagio) {
         if (selAreaPeca != null && selAreaVazia != null) {
 
@@ -136,7 +134,9 @@ public abstract class Jogador {
             selAreaVazia = null;
             ocultarVizinhos();
             this.vizinhosSelAreaPeca = null;
+            //limitar os movimentos a capturas após uma captura
             setQtdJogadas(qtdJogadas + 1);
+            // se na troca de estado ouver uma captura esse método retorna um booleano para que jogador ganhe mais uma jogada de captura
             return Jogo.getInstance().getTabuleiro().setEstado(t.t, estagio);
         }
         return false;
