@@ -23,28 +23,32 @@ public abstract class Jogador {
     public abstract boolean update(Actor entrada, Stage estagio);
     private List<Peca> pecas;
     private Casa selAreaPeca;
-    private MovimentoEstado selAreaVazia;
-    private List<MovimentoEstado> vizinhosSelAreaPeca;
+    private List<MovimentoEstado> caminhoEscolhido;
+    private List<List<MovimentoEstado>> caminhos;
     private int qtdJogadas;
 
     public Jogador() {
         pecas = new ArrayList<Peca>();
-        vizinhosSelAreaPeca = new ArrayList<MovimentoEstado>();
+        caminhos = new ArrayList<List<MovimentoEstado>>();
     }
-    // muda a cor da casa que jogodor atual pode se mover.
-    public void exibirVizinhos() {
-        for (int i = 0; i < vizinhosSelAreaPeca.size(); i++) {
 
-            MovimentoEstado vizinho = vizinhosSelAreaPeca.get(i);
-            if (vizinho.c.peca == null) {
-                vizinho.c.imagem.setColor(Color.GREEN);
+    // muda a cor da casa que jogodor atual pode se mover.
+
+    public void exibirVizinhos() {
+        for (List<MovimentoEstado> vizinho : caminhos) {
+            System.out.println("vizinhosss"+ vizinho.get(0).c.posicao[0] + " " +vizinho.get(0).c.posicao[1] );
+            if (vizinho.get(0).c.peca == null) {
+                System.out.println("entrou");
+                vizinho.get(0).c.imagem.setColor(Color.GREEN);
             }
         }
     }
+
     //ao termino de uma jogada fazer as casas voltarem a sua cor normal
+
     public void ocultarVizinhos() {
-        for (MovimentoEstado vizinho : vizinhosSelAreaPeca) {
-            vizinho.c.imagem.setColor(Color.BLACK);
+        for (List<MovimentoEstado> vizinho : caminhos) {
+            vizinho.get(0).c.imagem.setColor(Color.BLACK);
         }
     }
 
@@ -92,52 +96,63 @@ public abstract class Jogador {
     }
 
     /**
-     * @return the selAreaVazia
+     * @return the caminhoEscolhido
      */
-    public MovimentoEstado getSelAreaVazia() {
-        return selAreaVazia;
+    public List<MovimentoEstado> getCaminhoEscolhido() {
+        return caminhoEscolhido;
     }
 
     /**
-     * @param selArea the selAreaVazia to set
+     * @param selArea the caminhoEscolhido to set
      */
-    public void setSelAreaVazia(MovimentoEstado selAreaVazia) {
-        this.selAreaVazia = selAreaVazia;
+    public void setCaminhoEscolhido(List<MovimentoEstado> selAreaVazia) {
+        this.caminhoEscolhido = selAreaVazia;
     }
 
     /**
-     * @return the vizinhosSelAreaPeca
+     * @return the caminhos
      */
-    public List<MovimentoEstado> getVizinhosSelAreaPeca() {
-        return vizinhosSelAreaPeca;
+    public List<List<MovimentoEstado>> getVizinhosSelAreaPeca() {
+        return caminhos;
     }
 
     /**
-     * @param vizinhosSelAreaPeca the vizinhosSelAreaPeca to set
+     * @param vizinhosSelAreaPeca the caminhos to set
      */
-    public void setVizinhosSelAreaPeca(List<MovimentoEstado> vizinhosSelAreaPeca) {
-        this.vizinhosSelAreaPeca = vizinhosSelAreaPeca;
+    public void setVizinhosSelAreaPeca(List<List<MovimentoEstado>> vizinhosSelAreaPeca) {
+        this.caminhos = vizinhosSelAreaPeca;
     }
 //para que a peça seja movida o jogador deve ter selecionado uma peça e uma casa das disponiveis para o movimento.
-    public boolean moverPeca(Stage estagio) {
-        if (selAreaPeca != null && selAreaVazia != null) {
 
-            
-            MovimentoEstado t = selAreaVazia;
+    public boolean moverPeca(Stage estagio) {
+        if (selAreaPeca != null && caminhoEscolhido != null) {
+            System.out.println("vezes");
+            List<MovimentoEstado> to = caminhoEscolhido;
+            MovimentoEstado t = to.get(0);
             Peca p = selAreaPeca.peca;
+            
             p.imagem.addAction(Actions.sequence(Actions.moveTo(t.c.imagem.getX(), t.c.imagem.getY(), 0.5f)));
             t.c.peca = p;
             t.c.peca.imagem.setColor(p.getColorOriginal());
-
             selAreaPeca.peca = null;
-            selAreaPeca = null;
-            selAreaVazia = null;
+            selAreaPeca = t.c;
             ocultarVizinhos();
-            this.vizinhosSelAreaPeca = null;
+            to.remove(t);
             //limitar os movimentos a capturas após uma captura
             setQtdJogadas(qtdJogadas + 1);
+            Jogo.getInstance().getTabuleiro().estado.exibir();
+            t.t.exibir();
             // se na troca de estado ouver uma captura esse método retorna um booleano para que jogador ganhe mais uma jogada de captura
-            return Jogo.getInstance().getTabuleiro().setEstado(t.t, estagio);
+            Jogo.getInstance().getTabuleiro().setEstado(t.t, estagio);
+            if (!to.isEmpty()) {
+                return false;
+            } else {
+                qtdJogadas=0;
+                selAreaPeca = null;
+                caminhoEscolhido = null;
+                this.caminhos = null;
+                return true;
+            }
         }
         return false;
     }

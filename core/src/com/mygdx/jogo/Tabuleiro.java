@@ -80,45 +80,20 @@ public class Tabuleiro {
     }
     
     //Retorna casas disponíveis para peca andar
-    public List<MovimentoEstado> vizinhos(Casa casa,boolean capturado) {
-        List<MovimentoEstado> saida = new ArrayList<MovimentoEstado>();
+    public List<List<MovimentoEstado>> vizinhos(Casa casa,boolean capturado) {
+        List<List<MovimentoEstado>> saida = new ArrayList<List<MovimentoEstado>>();
         int lin = casa.posicao[0];
         int col = casa.posicao[1];
         System.out.println("atual");
         estado.exibir();
-        List<Estado> estados = estado.movimentosPossiveis(lin, col, capturado);
+        List<MovimentoEstado> estados = estado.movimentosPossiveis(lin, col, capturado);
         
-        System.out.println("estados: " + estados.size());
-        for (Estado estado1 : estados) {
-            estado1.exibir();
-        }
+       
         estados = estado.melhorCusto(lin, col, estados);
-        System.out.println("melhor percusso: " + estados.size());
-        for (Estado estado1 : estados) {
-            estado1.exibir();
+        for (MovimentoEstado est : estados) {
+            saida.add(estado.ordenar(est));
         }
-        List<Estado> iniciais = new ArrayList<Estado>();
-        for (Estado est : estados) {
-            iniciais.add(estado.inicial(est));
-        }
-        System.out.println("iniciais:" + iniciais.size());
-        for (Estado inicial : iniciais) {
-            int[][] m = estado.posicoesValidas(lin, col, inicial);
-            inicial.exibir();
-            for (int i = 0; i < m.length; i++) {
-                for (int j = 0; j < m.length; j++) {
-                    if ((i != lin || j != col) && m[i][j] == estado.matriz[lin][col]) {
-                        saida.add(new MovimentoEstado(matrizCasas[i][j],inicial));
-                    }
-                }
-            }
-        }
-
-        System.out.println("saida:" + saida.size());
-        for (MovimentoEstado s : saida) {
-            System.out.println("lin "+ s.c.posicao[0]+" col: "+s.c.posicao[1]);
-            s.t.exibir();
-        }
+        
         return saida;
     }
 
@@ -153,17 +128,16 @@ public class Tabuleiro {
         }
 
     }
-    public boolean setEstado(Estado t,Stage estagio ){
+    public void setEstado(Estado t,Stage estagio ){
         estado = t;
          for (int i = 0; i < estado.matriz.length; i++) {
             for (int j = 0; j < estado.matriz.length; j++) {
                 if (matrizCasas[i][j].peca != null && estado.matriz[i][j]==0) {
                    estagio.getActors().removeValue(matrizCasas[i][j].peca.imagem,true);
                    matrizCasas[i][j].peca=null;
-                   return false;
                 }
             }
         }
-         return true;
+         
     }
 }

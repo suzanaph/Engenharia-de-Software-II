@@ -24,7 +24,7 @@ public class Estado {
     public final static int DAMAJOGADOR2 = 4;
     public final static int VAZIA = 0;
     //diz qual o estado que chegou naquele após o movimento de uma peça
-    Estado anterior;
+    
 
     public Estado() {
         // tabuleiro inicial
@@ -41,6 +41,7 @@ public class Estado {
         qtdPecaJ1 = 12;
         qtdPecaJ2 = 12;
     }
+
     // método construtor para gerar os novos estados apartir de uma matriz
     public Estado(int[][] matriz) {
         this.matriz = matriz;
@@ -54,6 +55,7 @@ public class Estado {
             }
         }
     }
+
     // métodos de custo da IA também usado para escolher o melhor caminho.
     public int saldoJ1() {
         return qtdPecaJ1 - qtdPecaJ2;
@@ -62,6 +64,7 @@ public class Estado {
     public int saldoJ2() {
         return qtdPecaJ2 - qtdPecaJ1;
     }
+
     //método para criar uma cópia da matriz do estado do tabuleiro para que a copia possa ser editada
     public int[][] copia() {
         int[][] matrizCopia = new int[matriz.length][matriz[0].length];
@@ -73,91 +76,91 @@ public class Estado {
 
         return matrizCopia;
     }
+
     // método retorna todos os estados possiveis como a arvore de jogadas pra aquela peça especifica a IA sera usar esse método pra todas as peça 
-    public List<Estado> movimentosPossiveis(int lin, int col, boolean capturou) {
-        List<Estado> estados = new ArrayList<Estado>();
-        Estado temp = null;
+    public List<MovimentoEstado> movimentosPossiveis(int lin, int col, boolean capturou) {
+        List<MovimentoEstado> estados = new ArrayList<MovimentoEstado>();
+        MovimentoEstado temp = null;
+        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col],this);
+
         //indica qual tipo de peça pode se capturar
         int eliminar = 0;
-        System.out.println("lin : "+lin+" col:"+col);
+        System.out.println("lin : " + lin + " col:" + col);
         //limitar o jogador 2 a não comer pra trás
         if (matriz[lin][col] == PECAJOGADOR2) {
-           System.out.println("jogador2");
+            System.out.println("jogador2");
             if (!capturou) {
 
                 temp = moverDID(lin, col);
                 if (temp != null) {
                     estados.add(temp);
-                    temp.anterior = this;
+                    temp.anterior = anterior;
 
                 }
                 temp = moverDIE(lin, col);
                 if (temp != null) {
                     estados.add(temp);
-                    temp.anterior = this;
+                    temp.anterior = anterior;
                 }
             }
             eliminar = PECAJOGADOR1;
-        //limitar o jogador 2 a não comer pra trás
+            //limitar o jogador 2 a não comer pra trás
         } else if (matriz[lin][col] == PECAJOGADOR1) {
             System.out.println("jogador1");
             if (!capturou) {
                 temp = moverDSD(lin, col);
                 if (temp != null) {
                     estados.add(temp);
+                    temp.anterior = anterior;
                 }
                 temp = moverDSE(lin, col);
                 if (temp != null) {
                     estados.add(temp);
+                    temp.anterior = anterior;
                 }
             }
             eliminar = PECAJOGADOR2;
         }
-         System.out.println("escolhido: "+ eliminar);
+        
         // tentar realizar movimento de captura na diagonal superior direita caso não consiga retorna null
         temp = capturaDSD(lin, col, eliminar);
         if (temp != null) {
-            System.out.println("DSD");
-            temp.exibir();
             estados.add(temp);
-            temp.anterior = this;
+            temp.anterior = anterior;
             //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.movimentosPossiveis(lin + 2, col + 2, true));
+            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col + 2, true));
         }
         // tentar realizar movimento de captura na diagonal superior esquerda caso não consiga retorna null
         temp = capturaDSE(lin, col, eliminar);
         if (temp != null) {
-            System.out.println("DSE");
-            temp.exibir();
+            
             estados.add(temp);
-            temp.anterior = this;
-           //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.movimentosPossiveis(lin + 2, col - 2, true));
+            temp.anterior = anterior;
+            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
+            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col - 2, true));
         }
         // tentar realizar movimento de captura na diagonal inferior direita caso não consiga retorna null
         temp = capturaDID(lin, col, eliminar);
         if (temp != null) {
-            System.out.println("DID");
-            temp.exibir();
             estados.add(temp);
-            temp.anterior = this;
+            temp.anterior = anterior;
             //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.movimentosPossiveis(lin - 2, col + 2, true));
+            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col + 2, true));
         }
         // tentar realizar movimento de captura na diagonal inferior esquerda caso não consiga retorna null
         temp = capturaDIE(lin, col, eliminar);
         if (temp != null) {
-            System.out.println("DIE");
-            temp.exibir();
+   
             estados.add(temp);
-            temp.anterior = this;
+            temp.anterior = anterior;
             //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.movimentosPossiveis(lin - 2, col - 2, true));
+            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col - 2, true));
         }
         return estados;
     }
+
     // método captura usando peça normal na diagonal superior direita
-    public Estado capturaDSD(int lin, int col, int jogador) {
+    public MovimentoEstado capturaDSD(int lin, int col, int jogador) {
         try {
             int[][] cop = copia();
             //checa se a casa possui uma peça do jogador inimigo para ser capturada e se a casa após essa esta vazia.
@@ -165,10 +168,10 @@ public class Estado {
                 // mover peça da casa que ela estava para a nova
                 cop[lin + 2][col + 2] = cop[lin][col];
                 cop[lin][col] = 0;
-                 //deletar peça capturada
+                //deletar peça capturada
                 cop[lin + 1][col + 1] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin + 2][col + 2], novo);
             } else {
                 return null;
             }
@@ -176,8 +179,9 @@ public class Estado {
             return null;
         }
     }
-        // método captura usando peça normal na diagonal superior esquerda
-    public Estado capturaDSE(int lin, int col, int jogador) {
+
+    // método captura usando peça normal na diagonal superior esquerda
+    public MovimentoEstado capturaDSE(int lin, int col, int jogador) {
         try {
             int[][] cop = copia();
             //checa se a casa possui uma peça do jogador inimigo para ser capturada e se a casa após essa esta vazia.
@@ -188,7 +192,7 @@ public class Estado {
                 //deletar peça capturada
                 cop[lin + 1][col - 1] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin + 2][col - 2], novo);
             } else {
                 return null;
             }
@@ -196,8 +200,9 @@ public class Estado {
             return null;
         }
     }
+
     // método captura usando peça normal na diagonal inferior direita
-    public Estado capturaDID(int lin, int col, int jogador) {
+    public MovimentoEstado capturaDID(int lin, int col, int jogador) {
         try {
             int[][] cop = copia();
             //checa se a casa possui uma peça do jogador inimigo para ser capturada e se a casa após essa esta vazia.
@@ -205,10 +210,10 @@ public class Estado {
                 // mover peça da casa que ela estava para a nova
                 cop[lin - 2][col + 2] = cop[lin][col];
                 cop[lin][col] = 0;
-                 //deletar peça capturada
+                //deletar peça capturada
                 cop[lin - 1][col + 1] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+               return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin - 2][col + 2], novo);
             } else {
                 return null;
             }
@@ -216,8 +221,9 @@ public class Estado {
             return null;
         }
     }
+
     // método captura usando peça normal na diagonal inferior esquerda
-    public Estado capturaDIE(int lin, int col, int jogador) {
+    public MovimentoEstado capturaDIE(int lin, int col, int jogador) {
         try {
             int[][] cop = copia();
             //checa se a casa possui uma peça do jogador inimigo para ser capturada e se a casa após essa esta vazia.
@@ -225,10 +231,10 @@ public class Estado {
                 // mover peça da casa que ela estava para a nova
                 cop[lin - 2][col - 2] = cop[lin][col];
                 cop[lin][col] = 0;
-                 //deletar peça capturada
+                //deletar peça capturada
                 cop[lin - 1][col - 1] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin - 2][col - 2], novo);
             } else {
                 return null;
             }
@@ -237,7 +243,8 @@ public class Estado {
         }
     }
 // movimento simples de peça normal para diagonal superior direita
-    public Estado moverDSD(int lin, int col) {
+
+    public MovimentoEstado moverDSD(int lin, int col) {
         try {
             int[][] cop = copia();
             if (cop[lin + 1][col + 1] == 0) {
@@ -245,7 +252,8 @@ public class Estado {
                 cop[lin + 1][col + 1] = cop[lin][col];
                 cop[lin][col] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin + 1][col + 1], novo);
+
             } else {
                 return null;
             }
@@ -254,7 +262,8 @@ public class Estado {
         }
     }
 // movimento simples de peça normal para diagonal superior esquerda
-    public Estado moverDSE(int lin, int col) {
+
+    public MovimentoEstado moverDSE(int lin, int col) {
         try {
             int[][] cop = copia();
             if (cop[lin + 1][col - 1] == 0) {
@@ -262,7 +271,8 @@ public class Estado {
                 cop[lin + 1][col - 1] = cop[lin][col];
                 cop[lin][col] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin + 1][col - 1], novo);
+
             } else {
                 return null;
             }
@@ -271,7 +281,8 @@ public class Estado {
         }
     }
 // movimento simples de peça normal para diagonal inferior direita
-    public Estado moverDID(int lin, int col) {
+
+    public MovimentoEstado moverDID(int lin, int col) {
         try {
             int[][] cop = copia();
             if (cop[lin - 1][col + 1] == 0) {
@@ -279,7 +290,7 @@ public class Estado {
                 cop[lin - 1][col + 1] = cop[lin][col];
                 cop[lin][col] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col + 1], novo);
             } else {
                 return null;
             }
@@ -288,7 +299,8 @@ public class Estado {
         }
     }
 // movimento simples de peça normal para diagonal inferior esquerda
-    public Estado moverDIE(int lin, int col) {
+
+    public MovimentoEstado moverDIE(int lin, int col) {
         try {
             int[][] cop = copia();
             if (cop[lin - 1][col - 1] == 0) {
@@ -296,7 +308,8 @@ public class Estado {
                 cop[lin - 1][col - 1] = cop[lin][col];
                 cop[lin][col] = 0;
                 Estado novo = new Estado(cop);
-                return novo;
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col - 1], novo);
+
             } else {
                 return null;
             }
@@ -304,38 +317,42 @@ public class Estado {
             return null;
         }
     }
+
     //retorna o inicial diferente do estado atual do tabuleiro para descobrir qual movimento foi usado para chegar no mesmo 
-    public Estado inicial(Estado other) {
-        Estado inicial = other;
-       while (inicial.anterior != null && !inicial.anterior.equals(this)) {
+    public List<MovimentoEstado> ordenar(MovimentoEstado other) {
+        MovimentoEstado inicial = other;
+        List<MovimentoEstado> movimentos = new ArrayList<MovimentoEstado>();
+        movimentos.add(other);
+        while (inicial.anterior != null && !inicial.anterior.t.equals(this)) {
             inicial = inicial.anterior;
+            movimentos.add(0,inicial);
         }
-        return inicial;
+        return movimentos;
     }
 // dados aquela arvore de estados geradas pelas possibilidades de movimento e retorna as folhas de maior cutso , por lógica as folhas da arvore tem o melhor custo
-   
-    public List<Estado> melhorCusto(int lin, int col, List<Estado> estados) {
-        List<Estado> melhor = new ArrayList<Estado>();
+
+    public List<MovimentoEstado> melhorCusto(int lin, int col, List<MovimentoEstado> estados) {
+        List<MovimentoEstado> melhor = new ArrayList<MovimentoEstado>();
         int custo = Integer.MIN_VALUE;
         if (matriz[lin][col] == PECAJOGADOR1 || matriz[lin][col] == DAMAJOGADOR1) {
-            for (Estado estado : estados) {
-                if (custo < estado.saldoJ1()) {
-                    custo = estado.saldoJ1();
+            for (MovimentoEstado estado : estados) {
+                if (custo < estado.getCustoJ1()) {
+                    custo = estado.getCustoJ1();
                 }
             }
-            for (Estado estado : estados) {
-                if (custo == estado.saldoJ1()) {
+            for (MovimentoEstado estado : estados) {
+                if (custo == estado.getCustoJ1()) {
                     melhor.add(estado);
                 }
             }
         } else if (matriz[lin][col] == PECAJOGADOR2 || matriz[lin][col] == DAMAJOGADOR2) {
-            for (Estado estado : estados) {
-                if (custo < estado.saldoJ2()) {
-                    custo = estado.saldoJ2();
+             for (MovimentoEstado estado : estados) {
+                if (custo < estado.getCustoJ2()) {
+                    custo = estado.getCustoJ2();
                 }
             }
-            for (Estado estado : estados) {
-                if (custo == estado.saldoJ2()) {
+            for (MovimentoEstado estado : estados) {
+                if (custo == estado.getCustoJ2()) {
                     melhor.add(estado);
                 }
             }
@@ -345,6 +362,7 @@ public class Estado {
     }
 // ao subtrair o estado atual do estado gerado por um movimento gera-se uma matriz cheia de zeros 
     //com 2 digitos de valor igual que representa o movimentoe um diferente que é peca a ser removida 
+
     public int[][] posicoesValidas(int lin, int col, Estado m) {
         return subtracaoMatrizes(matriz, m.matriz);
     }
@@ -359,6 +377,7 @@ public class Estado {
         return m3;
     }
 // utilizado a matriz para verificar a mudança de um estado pra outro
+
     public int[][] subtracaoMatrizes(int[][] m1, int[][] m2) {
         int[][] m3 = new int[m1.length][m1.length];
         for (int i = 0; i < m1.length; i++) {
@@ -368,14 +387,15 @@ public class Estado {
         }
         return m3;
     }
-    //por questão de teste exibir o estado
-    public void exibir(){
+
+    //por questão de teste exibir o 
+    public void exibir() {
         for (int i = 0; i < matriz.length; i++) {
             System.out.println("");
             for (int j = 0; j < matriz[i].length; j++) {
-                System.out.print( matriz[i][j]+" ");
+                System.out.print(matriz[i][j] + " ");
             }
         }
-         System.out.println("");
+        System.out.println("");
     }
 }
