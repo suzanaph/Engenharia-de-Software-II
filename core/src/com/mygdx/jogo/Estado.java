@@ -42,7 +42,10 @@ public class Estado {
         qtdPecaJ2 = 12;
     }
 
-    // método construtor para gerar os novos estados apartir de uma matriz
+       /**Método construtor do estado apartir de uma matriz que representa as posições das peças.
+        * e conta q auntidade de peças de cada jogador.
+    * @param matriz recebe de posições.  
+    */
     public Estado(int[][] matriz) {
         this.matriz = matriz;
         for (int i = 0; i < matriz.length; i++) {
@@ -56,16 +59,24 @@ public class Estado {
         }
     }
 
-    // métodos de custo da IA também usado para escolher o melhor caminho.
+   
+     /**Método utilizado para descobrir a diferença de peças entrem os dois jogadores (custo usado no mimmax),
+    * @return inteiro que respresenta o custo daquele estado.
+    */
     public int saldoJ1() {
         return qtdPecaJ1 - qtdPecaJ2;
     }
-
+    /**Método utilizado para descobrir a diferença de peças entrem os dois jogadores (custo usado no mimmax),
+    * @return inteiro que respresenta o custo daquele estado.
+    */
     public int saldoJ2() {
         return qtdPecaJ2 - qtdPecaJ1;
     }
 
-    //método para criar uma cópia da matriz do estado do tabuleiro para que a copia possa ser editada
+    /**Método utilizado para criar uma cópia da matriz do estado do tabuleiro para que a copia possa ser editada
+    * sem alaterar a original.
+    * @return matrizCopia copia da matriz pertencente a este estado.
+    */
     public int[][] copia() {
         int[][] matrizCopia = new int[matriz.length][matriz[0].length];
         for (int i = 0; i < matriz.length; i++) {
@@ -77,7 +88,13 @@ public class Estado {
         return matrizCopia;
     }
 
-    // método retorna todos os estados possiveis como a arvore de jogadas pra aquela peça especifica a IA sera usar esse método pra todas as peça 
+    /** Método utilizado para verificar todos os movimentos possiveis 
+    * onde cada movimento gera uma tupla casa-estado. 
+    * @param lin linha da casa selecionada pelo jogador
+    * @param  col coluna da casa selecionada pelo jogador
+    * @param capturou limita a verificação de movimentos a apenas capturas
+    * @return estados lista contendo todas as tuplas casa-estado geradas pelos movimentos realizados com sucesso.
+    */
     public List<MovimentoEstado> movimentosPossiveis(int lin, int col, boolean capturou) {
         List<MovimentoEstado> estados = new ArrayList<MovimentoEstado>();
         MovimentoEstado temp = null;
@@ -329,8 +346,13 @@ public class Estado {
         }
         return movimentos;
     }
-// dados aquela arvore de estados geradas pelas possibilidades de movimento e retorna as folhas de maior cutso , por lógica as folhas da arvore tem o melhor custo
-
+ /** Método utilizado para verificar dos estados encontrado pelos movimentos possives quais possuem o maior valor de custo
+  * *para o jogador , de acordo com a regra da lei da maioria para que limite seus movimentos disponiveis aos movimentos que capturam mais peças
+    * @param lin linha da casa selecionada pelo jogador
+    * @param  col coluna da casa selecionada pelo jogador
+    * @param estados lista dos estados gerados pelos movimentos possiveis.
+    * @return melhor lista contendo todas as tuplas casa-estado ,cujo estado possui o maior custo.
+    */
     public List<MovimentoEstado> melhorCusto(int lin, int col, List<MovimentoEstado> estados) {
         List<MovimentoEstado> melhor = new ArrayList<MovimentoEstado>();
         int custo = Integer.MIN_VALUE;
@@ -360,33 +382,8 @@ public class Estado {
 
         return melhor;
     }
-// ao subtrair o estado atual do estado gerado por um movimento gera-se uma matriz cheia de zeros 
-    //com 2 digitos de valor igual que representa o movimentoe um diferente que é peca a ser removida 
 
-    public int[][] posicoesValidas(int lin, int col, Estado m) {
-        return subtracaoMatrizes(matriz, m.matriz);
-    }
-
-    public int[][] somaMatrizes(int[][] m1, int[][] m2) {
-        int[][] m3 = new int[m1.length][m1.length];
-        for (int i = 0; i < m1.length; i++) {
-            for (int j = 0; j < m1[i].length; j++) {
-                m3[i][j] = m1[i][j] + m2[i][j];
-            }
-        }
-        return m3;
-    }
-// utilizado a matriz para verificar a mudança de um estado pra outro
-
-    public int[][] subtracaoMatrizes(int[][] m1, int[][] m2) {
-        int[][] m3 = new int[m1.length][m1.length];
-        for (int i = 0; i < m1.length; i++) {
-            for (int j = 0; j < m1[i].length; j++) {
-                m3[i][j] = Math.abs(m1[i][j] - m2[i][j]);
-            }
-        }
-        return m3;
-    }
+  
 
     //por questão de teste exibir o 
     public void exibir() {

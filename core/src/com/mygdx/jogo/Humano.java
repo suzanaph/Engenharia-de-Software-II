@@ -18,25 +18,29 @@ import java.util.List;
 public class Humano extends Jogador {
 
     public Casa anterior;
-
+    /**Método utilizado para atualizar os estados do tabuleiro conforme as casas que o jogador escolher,
+    * @param selecionada é a casa selecionada pelo jogador.  
+    * @param estagio utilizado no método de mover invocado por este método para remover a peça capturada.
+    * @return se a saida for verdadeira o turno do jogador é finalizado ,caso for falsa ele continua atualizando.
+    */
     @Override
-    public boolean update(Actor entrada, Stage estagio) {
+    public boolean update(Casa selecionada, Stage estagio) {
         if (getSelAreaPeca() != null && getSelAreaPeca().peca != null && getSelAreaPeca().peca.imagem.getActions().size > 0) {
 
         } else {
-            Casa a = Jogo.getInstance().getTabuleiro().getArea(entrada);
+            
             if (getSelAreaPeca() != null && getCaminhoEscolhido() != null) {
                 return moverPeca(estagio);
-            } else if (a != null) {
+            } else if (selecionada != null) {
 
-                if (a.peca != null && a != anterior) {// fazer algo para isso executar uma unica vez
-                    if (getPecas().contains(a.peca)) {
+                if (selecionada.peca != null && selecionada != anterior) {// fazer algo para isso executar uma unica vez
+                    if (getPecas().contains(selecionada.peca)) {
                         if (getSelAreaPeca() != null && getSelAreaPeca().peca != null) {
                             getSelAreaPeca().peca.imagem.setColor(getSelAreaPeca().peca.getColorOriginal());
                             ocultarVizinhos();
                         }
-                        setSelAreaPeca(a);
-                        setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().vizinhos(a, getQtdJogadas() > 0));
+                        setSelAreaPeca(selecionada);
+                        setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().caminhosDisponiveis(selecionada, getQtdJogadas() > 0));
                         if (getVizinhosSelAreaPeca().size() == 0 && getQtdJogadas() > 0) {
                             return true;
                         }
@@ -46,16 +50,19 @@ public class Humano extends Jogador {
                         System.out.println("caminhos: " + getVizinhosSelAreaPeca().size());
                     }
                 } else if (getVizinhosSelAreaPeca() != null) {
-                    casaValida(a);
+                    casaValida(selecionada);
                 }
             }
         }
         return false;
     }
-
-    private void casaValida(Casa a) {
+    /**Método utilizado para descobrir se a casa selecionada pelo jogador pertence a um caminho possivel gerado 
+     * pela casa selecionada anteriormente contendo uma peça do jogador.
+    * @param selecionada é a casa selecionada pelo jogador que não deve possuir peça.  
+    */
+    private void casaValida(Casa selecionada) {
         for (List<MovimentoEstado> col : getVizinhosSelAreaPeca()) {
-            if (col.get(0).c.equals(a)) {
+            if (col.get(0).c.equals(selecionada)) {
                 setCaminhoEscolhido(col);
 
             }

@@ -20,7 +20,7 @@ public abstract class Jogador {
 
     private boolean turno;
 
-    public abstract boolean update(Actor entrada, Stage estagio);
+    public abstract boolean update(Casa entrada, Stage estagio);
     private List<Peca> pecas;
     private Casa selAreaPeca;
     private List<MovimentoEstado> caminhoEscolhido;
@@ -32,8 +32,8 @@ public abstract class Jogador {
         caminhos = new ArrayList<List<MovimentoEstado>>();
     }
 
-    // muda a cor da casa que jogodor atual pode se mover.
-
+    /**Método utilizado para modificar a cor das casas para qual a peça do jogador pode se mover
+    */
     public void exibirVizinhos() {
         for (List<MovimentoEstado> vizinho : caminhos) {
             System.out.println("vizinhosss"+ vizinho.get(0).c.posicao[0] + " " +vizinho.get(0).c.posicao[1] );
@@ -44,8 +44,9 @@ public abstract class Jogador {
         }
     }
 
-    //ao termino de uma jogada fazer as casas voltarem a sua cor normal
-
+    /**Método utilizado para ao termino de uma jogada fazer as casas voltarem a sua cor inicial
+    *
+    */
     public void ocultarVizinhos() {
         for (List<MovimentoEstado> vizinho : caminhos) {
             vizinho.get(0).c.imagem.setColor(Color.BLACK);
@@ -122,8 +123,11 @@ public abstract class Jogador {
     public void setVizinhosSelAreaPeca(List<List<MovimentoEstado>> vizinhosSelAreaPeca) {
         this.caminhos = vizinhosSelAreaPeca;
     }
-//para que a peça seja movida o jogador deve ter selecionado uma peça e uma casa das disponiveis para o movimento.
-
+/**Método utilizado para realizar o movimento das peças , trocando as refências da casa que ela estava 
+ * e a casa para qual ela se moveu.
+    * @param estagio utilizado para remover a peça que for capturada.
+    * @return se verdadeiro termina o turno do jogador falso ele continua atualizando,
+    */
     public boolean moverPeca(Stage estagio) {
         if (selAreaPeca != null && caminhoEscolhido != null) {
             System.out.println("vezes");

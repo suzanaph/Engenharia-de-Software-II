@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 public class Maquina extends Jogador{
 
     @Override
-    public boolean update(Actor entrada,Stage estagio) {
+    public boolean update(Casa entrada,Stage estagio) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

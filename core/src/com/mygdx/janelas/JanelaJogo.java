@@ -25,7 +25,7 @@ public class JanelaJogo extends Janela {
        jogada = new Image(new Texture("peca.png"));
         jogada.setPosition(700, 150);
         jogada.setColor(Jogo.COLORJOGADOR1);
-        Jogo.getInstance().getTabuleiro().adcionaArea(estagio);
+        Jogo.getInstance().getTabuleiro().adicionaArea(estagio);
         botoes.add(new Botao("iniciar.png", 650, 50,new BAMudarTela(BAMudarTela.MENU)));
         estagio.addActor(botoes.get(0).imagem);
         estagio.addActor(jogada);
@@ -61,14 +61,14 @@ public class JanelaJogo extends Janela {
     @Override
     void processa() {
        if(Jogo.getInstance().getJogador1().isTurno()){
-            if(clicado != null && Jogo.getInstance().getJogador1().update(clicado,estagio)){
+            if(clicado != null && Jogo.getInstance().getJogador1().update(Jogo.getInstance().getTabuleiro().getCasa(clicado),estagio)){
                 Jogo.getInstance().getJogador1().setTurno(false);
                  Jogo.getInstance().getJogador1().setQtdJogadas(0);
                 Jogo.getInstance().getJogador2().setTurno(true);
                 jogada.setColor(Jogo.COLORJOGADOR2);
             }
        }else if(Jogo.getInstance().getJogador2().isTurno()){
-            if(clicado != null && Jogo.getInstance().getJogador2().update(clicado,estagio)){
+            if(clicado != null && Jogo.getInstance().getJogador2().update(Jogo.getInstance().getTabuleiro().getCasa(clicado),estagio)){
                  Jogo.getInstance().getJogador2().setTurno(false);
                  Jogo.getInstance().getJogador2().setQtdJogadas(0);
                  Jogo.getInstance().getJogador1().setTurno(true);
