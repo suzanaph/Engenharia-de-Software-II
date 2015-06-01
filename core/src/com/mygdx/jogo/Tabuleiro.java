@@ -182,6 +182,7 @@ public class Tabuleiro {
      
     }
 	public void promoverPecas() {
+		int fim = estado.matriz.length-1;
 		for (int i = 0; i < estado.matriz.length; i++) {
 			if(estado.matriz[0][i]==Estado.PECAJOGADOR2){
 				estado.matriz[0][i] = Estado.DAMAJOGADOR2;
@@ -191,11 +192,11 @@ public class Tabuleiro {
 			}
 		}
 		for (int i = 0; i < estado.matriz.length; i++) {
-			if(estado.matriz[0][i]==Estado.PECAJOGADOR1){
-				estado.matriz[0][i] = Estado.DAMAJOGADOR1;
-				matrizCasas[0][i].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR1);
-				matrizCasas[0][i].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR1);
-				matrizCasas[0][i].peca.dama = true;
+			if(estado.matriz[fim][i]==Estado.PECAJOGADOR1){
+				estado.matriz[fim][i] = Estado.DAMAJOGADOR1;
+				matrizCasas[fim][i].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR1);
+				matrizCasas[fim][i].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR1);
+				matrizCasas[fim][i].peca.dama = true;
 			}
 		}
 	}

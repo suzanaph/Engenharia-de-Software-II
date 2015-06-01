@@ -12,10 +12,16 @@ package com.mygdx.jogo;
 public class MovimentoEstado {
     Estado t;
     Casa c;
+    Casa eliminar;
     MovimentoEstado anterior;
     MovimentoEstado(Casa matrizCasa, Estado inicial) {
         this.t = inicial;
         this.c = matrizCasa;  
+    }
+    MovimentoEstado(Casa matrizCasa,Casa eliminar, Estado inicial) {
+        this.t = inicial;
+        this.c = matrizCasa;  
+        this.eliminar = eliminar;
     }
     public int getCustoJ1(){
         return t.saldoJ1();

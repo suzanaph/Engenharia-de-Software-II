@@ -32,14 +32,14 @@ public class Estado {
 		// tabuleiro inicial
 		matriz = new int[][] {
 
-{1,0,1,0,0,0,1,0},
-{0,1,0,1,0,1,0,1},
 {1,0,1,0,1,0,1,0},
-{0,0,0,0,0,0,0,0},
+{0,1,0,1,0,1,0,1},
+{1,0,1,0,2,0,1,0},
+{0,0,0,3,0,3,0,0},
 {0,0,0,0,0,0,0,0},
 {0,3,0,3,0,3,0,3},
-{3,0,3,0,3,0,3,0},
-{0,3,0,3,0,3,0,3},
+{3,0,3,0,0,0,3,0},
+{0,3,0,3,0,3,0,0},
 				};
 		qtdPecaJ1 = 12;
 		qtdPecaJ2 = 12;
@@ -181,13 +181,13 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal superior direita
-	public MovimentoEstado capturaDSD(int lin, int col, int jogador) {
+	public MovimentoEstado capturaDSD(int lin, int col, int jogador,MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin + 1][col + 1] == jogador || cop[lin + 1][col + 1] == jogador + 1)
-					&& cop[lin + 2][col + 2] == 0) {
+					&& cop[lin + 2][col + 2] == 0 && !checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin+1][col+1],anterior)) {
 				// mover peça da casa que ela estava para a nova
 				cop[lin + 2][col + 2] = cop[lin][col];
 				cop[lin][col] = 0;
@@ -196,6 +196,7 @@ public class Estado {
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
 						Jogo.getInstance().getTabuleiro().matrizCasas[lin + 2][col + 2],
+						Jogo.getInstance().getTabuleiro().matrizCasas[lin + 1][col + 1],
 						novo);
 			} else {
 				return null;
@@ -206,13 +207,13 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal superior esquerda
-	public MovimentoEstado capturaDSE(int lin, int col, int jogador) {
+	public MovimentoEstado capturaDSE(int lin, int col, int jogador,MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin + 1][col - 1] == jogador || cop[lin + 1][col - 1] == jogador + 1)
-					&& cop[lin + 2][col - 2] == 0) {
+					&& cop[lin + 2][col - 2] == 0 &&!checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin+1][col-1],anterior)) {
 				// mover peça da casa que ela estava para a nova
 				cop[lin + 2][col - 2] = cop[lin][col];
 				cop[lin][col] = 0;
@@ -221,6 +222,7 @@ public class Estado {
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
 						Jogo.getInstance().getTabuleiro().matrizCasas[lin + 2][col - 2],
+						Jogo.getInstance().getTabuleiro().matrizCasas[lin + 1][col - 1],
 						novo);
 			} else {
 				return null;
@@ -231,13 +233,13 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal inferior direita
-	public MovimentoEstado capturaDID(int lin, int col, int jogador) {
+	public MovimentoEstado capturaDID(int lin, int col, int jogador,MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin - 1][col + 1] == jogador || cop[lin - 1][col + 1] == jogador + 1)
-					&& cop[lin - 2][col + 2] == 0) {
+					&& cop[lin - 2][col + 2] == 0&&!checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin-1][col+1],anterior)) {
 				// mover peça da casa que ela estava para a nova
 				cop[lin - 2][col + 2] = cop[lin][col];
 				cop[lin][col] = 0;
@@ -246,6 +248,7 @@ public class Estado {
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
 						Jogo.getInstance().getTabuleiro().matrizCasas[lin - 2][col + 2],
+						Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col + 1],
 						novo);
 			} else {
 				return null;
@@ -256,13 +259,13 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal inferior esquerda
-	public MovimentoEstado capturaDIE(int lin, int col, int jogador) {
+	public MovimentoEstado capturaDIE(int lin, int col, int jogador,MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin - 1][col - 1] == jogador || cop[lin - 1][col - 1] == jogador + 1)
-					&& cop[lin - 2][col - 2] == 0) {
+					&& cop[lin - 2][col - 2] == 0 && !checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin-1][col-1],anterior)) {
 				// mover peça da casa que ela estava para a nova
 				cop[lin - 2][col - 2] = cop[lin][col];
 				cop[lin][col] = 0;
@@ -271,6 +274,7 @@ public class Estado {
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
 						Jogo.getInstance().getTabuleiro().matrizCasas[lin - 2][col - 2],
+						Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col -1],
 						novo);
 			} else {
 				return null;
@@ -506,6 +510,7 @@ public class Estado {
 				&& (i + passoI >= 0 && j + passoJ >= 0)) {
 			if ((cop[i][j] == eliminar || cop[i][j] == eliminar + 1)
 					&& cop[i + passoI][j + passoJ] == 0) {
+				if( !checar(Jogo.getInstance().getTabuleiro().matrizCasas[i][j],anterior)){
 				cop[i + passoI][j + passoJ] = cop[lin][col];
 				cop[lin][col] = 0;
 				// deletar peça capturada
@@ -513,12 +518,17 @@ public class Estado {
 				Estado novo = new Estado(cop);
 				temp = new MovimentoEstado(
 						Jogo.getInstance().getTabuleiro().matrizCasas[i
-								+ passoI][j + passoJ], novo);
+								+ passoI][j + passoJ],
+								Jogo.getInstance().getTabuleiro().matrizCasas[i][j],
+								novo);
 				estados.add(temp);
 				temp.anterior = anterior;
 				estados.addAll(temp.t.movimentosPossiveis(i + passoI, j
 						+ passoJ, true, temp));
-				break;
+					break;
+				}else{
+					break;
+				}
 			} else if ((cop[i][j] == eliminar || cop[i][j] == eliminar + 1)
 					&& cop[i + passoI][j + passoJ] != 0) {
 				break;
@@ -528,12 +538,23 @@ public class Estado {
 		}
 	}
 
+	private boolean checar(Casa c, MovimentoEstado anterior) {
+		
+		while(anterior!=null ){
+			if(anterior.eliminar != null && anterior.eliminar.equals(c)){
+				 return true;
+			}
+			anterior = anterior.anterior;
+		}
+		return false;
+	}
+
 	private void capturaPecaNormal(List<MovimentoEstado> estados,
 			MovimentoEstado anterior, int eliminar, int lin, int col) {
 		// tentar realizar movimento de captura na diagonal superior direita
 		// caso não consiga retorna null
 		MovimentoEstado temp = null;
-		temp = capturaDSD(lin, col, eliminar);
+		temp = capturaDSD(lin, col, eliminar,anterior);
 		if (temp != null) {
 
 			estados.add(temp);
@@ -545,7 +566,7 @@ public class Estado {
 		}
 		// tentar realizar movimento de captura na diagonal superior esquerda
 		// caso não consiga retorna null
-		temp = capturaDSE(lin, col, eliminar);
+		temp = capturaDSE(lin, col, eliminar,anterior);
 		if (temp != null) {
 
 			estados.add(temp);
@@ -557,7 +578,7 @@ public class Estado {
 		}
 		// tentar realizar movimento de captura na diagonal inferior direita
 		// caso não consiga retorna null
-		temp = capturaDID(lin, col, eliminar);
+		temp = capturaDID(lin, col, eliminar,anterior);
 		if (temp != null) {
 			estados.add(temp);
 			temp.anterior = anterior;
@@ -568,7 +589,7 @@ public class Estado {
 		}
 		// tentar realizar movimento de captura na diagonal inferior esquerda
 		// caso não consiga retorna null
-		temp = capturaDIE(lin, col, eliminar);
+		temp = capturaDIE(lin, col, eliminar,anterior);
 		if (temp != null) {
 
 			estados.add(temp);
