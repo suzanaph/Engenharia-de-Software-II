@@ -108,10 +108,9 @@ public class Estado {
      * @return estados lista contendo todas as tuplas casa-estado geradas pelos
      * movimentos realizados com sucesso.
      */
-    public List<MovimentoEstado> movimentosPossiveis(int lin, int col, boolean capturou) {
+    public List<MovimentoEstado> movimentosPossiveis(int lin, int col, boolean capturou,MovimentoEstado anterior) {
         List<MovimentoEstado> estados = new ArrayList<MovimentoEstado>();
         MovimentoEstado temp = null;
-        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
 
         //indica qual tipo de peça pode se capturar
         int eliminar = 0;
@@ -132,7 +131,7 @@ public class Estado {
                 }
             }
             eliminar = PECAJOGADOR1;
-            capturaPecaNormal(estados, temp, eliminar, lin, col);
+            capturaPecaNormal(estados,temp, eliminar, lin, col);
             //limitar o jogador 2 a não comer pra trás
         } else if (matriz[lin][col] == PECAJOGADOR1) {
             if (!capturou) {
@@ -148,7 +147,8 @@ public class Estado {
                 }
             }
             eliminar = PECAJOGADOR2;
-            capturaPecaNormal(estados,  temp, eliminar, lin, col);
+            
+            capturaPecaNormal(estados,  anterior, eliminar, lin, col);
         } else {
             if (matriz[lin][col] == DAMAJOGADOR1) {
                 eliminar = PECAJOGADOR2;
@@ -156,15 +156,15 @@ public class Estado {
                 eliminar = PECAJOGADOR1;
             }
             if (!capturou) {
-                movimentoDama(estados, temp, lin, col, +1, +1);
-                movimentoDama(estados,  temp, lin, col, -1, -1);
-                movimentoDama(estados, temp, lin, col, +1, -1);
-                movimentoDama(estados,  temp, lin, col, -1, +1);
+                movimentoDama(estados,anterior, lin, col, +1, +1);
+                movimentoDama(estados,  anterior, lin, col, -1, -1);
+                movimentoDama(estados, anterior, lin, col, +1, -1);
+                movimentoDama(estados,  anterior, lin, col, -1, +1);
             }
-            capturaDama(estados,  temp, eliminar, lin, col, +1, +1);
-            capturaDama(estados, temp, eliminar, lin, col, -1, -1);
-            capturaDama(estados, temp, eliminar, lin, col, +1, -1);
-            capturaDama(estados,  temp, eliminar, lin, col, -1, +1);
+            capturaDama(estados,  anterior, eliminar, lin, col, +1, +1);
+            capturaDama(estados, anterior, eliminar, lin, col, -1, -1);
+            capturaDama(estados, anterior, eliminar, lin, col, +1, -1);
+            capturaDama(estados, anterior, eliminar, lin, col, -1, +1);
         }
 
         
@@ -416,15 +416,14 @@ public class Estado {
         System.out.println("");
     }
 
-    private void movimentoDama(List<MovimentoEstado> estados, MovimentoEstado temp, int lin, int col, int passoI, int passoJ) {
-        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
-        int i = lin + passoI;
+    private void movimentoDama(List<MovimentoEstado> estados, MovimentoEstado anterior, int lin, int col, int passoI, int passoJ) {
+    	 MovimentoEstado temp = null;
+    	int i = lin + passoI;
         int j = col + passoJ;
         while ((i < matriz.length && j < matriz.length)
                 && (i < matriz.length && j >= 0)
                 && (i >= 0 && j < matriz.length)
                 && (i >= 0 && j >= 0)) {
-            System.out.println(" damas lin : " + i + " col:" + j);
             temp = moverDama(i, j, lin, col);
             if (temp != null) {
                 temp.t.exibir();
@@ -438,9 +437,9 @@ public class Estado {
         }
     }
 
-    private void capturaDama(List<MovimentoEstado> estados, MovimentoEstado temp, int eliminar, int lin, int col, int passoI, int passoJ) {
-         MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
-        int i = lin + passoI;
+    private void capturaDama(List<MovimentoEstado> estados,MovimentoEstado anterior,  int eliminar, int lin, int col, int passoI, int passoJ) {
+    	 MovimentoEstado temp = null;
+    	int i = lin + passoI;
          int j = col + passoJ;
          int[][] cop = copia();
         while ((i < matriz.length && j < matriz.length)
@@ -461,7 +460,7 @@ public class Estado {
                 temp = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[i+passoI][j+passoJ],novo);
                 estados.add(temp);
                 temp.anterior = anterior;
-                estados.addAll(temp.t.movimentosPossiveis(i+passoI, j+passoJ, true));
+                estados.addAll(temp.t.movimentosPossiveis(i+passoI, j+passoJ, true,temp));
             }else if((cop[i][j]==eliminar || cop[i][j]==eliminar+1 )&&cop[i+passoI][j+passoJ]!=0){
                 break;
             }
@@ -470,16 +469,16 @@ public class Estado {
         }
     }
 
-    private void capturaPecaNormal(List<MovimentoEstado> estados,  MovimentoEstado temp, int eliminar, int lin, int col) {
+    private void capturaPecaNormal(List<MovimentoEstado> estados,MovimentoEstado anterior, int eliminar, int lin, int col) {
         // tentar realizar movimento de captura na diagonal superior direita caso não consiga retorna null
-        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
-        temp = capturaDSD(lin, col, eliminar);
+    	 MovimentoEstado temp = null;
+    	temp = capturaDSD(lin, col, eliminar);
         if (temp != null) {
 
             estados.add(temp);
             temp.anterior = anterior;
             //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col + 2, true));
+            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col + 2, true,temp));
         }
     // tentar realizar movimento de captura na diagonal superior esquerda caso não consiga retorna null
         temp = capturaDSE(lin, col, eliminar);
@@ -488,7 +487,7 @@ public class Estado {
             estados.add(temp);
             temp.anterior = anterior;
             //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col - 2, true));
+            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col - 2, true,temp));
         }
         // tentar realizar movimento de captura na diagonal inferior direita caso não consiga retorna null
         temp = capturaDID(lin, col, eliminar);
@@ -496,7 +495,7 @@ public class Estado {
             estados.add(temp);
             temp.anterior = anterior;
             //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col + 2, true));
+            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col + 2, true,temp));
         }
         // tentar realizar movimento de captura na diagonal inferior esquerda caso não consiga retorna null
         temp = capturaDIE(lin, col, eliminar);
@@ -505,7 +504,7 @@ public class Estado {
             estados.add(temp);
             temp.anterior = anterior;
             //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col - 2, true));
+            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col - 2, true,temp));
         }
     }
     // métodos para ajudar a debugar 

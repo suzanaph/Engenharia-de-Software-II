@@ -35,7 +35,6 @@ public abstract class Jogador {
     */
     public void exibirVizinhos() {
         for (List<MovimentoEstado> vizinho : caminhos) {
-            System.out.println("vizinhosss"+ vizinho.get(0).c.posicao[0] + " " +vizinho.get(0).c.posicao[1] );
             if (vizinho.get(0).c.peca == null) {
                 vizinho.get(0).c.imagem.setColor(Color.GREEN);
             }
@@ -128,7 +127,6 @@ public abstract class Jogador {
     */
     public boolean moverPeca(Stage estagio) {
         if (selAreaPeca != null && caminhoEscolhido != null) {
-            System.out.println("vezes");
             List<MovimentoEstado> to = caminhoEscolhido;
             MovimentoEstado t = to.get(0);
             Peca p = selAreaPeca.peca;

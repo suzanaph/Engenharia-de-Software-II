@@ -41,10 +41,6 @@ public class Humano extends Jogador {
                         }
                         setSelAreaPeca(selecionada);
                         setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().caminhosDisponiveis(selecionada, getQtdJogadas() > 0));
-                        System.err.println("quantidade de caminhos " +getVizinhosSelAreaPeca().size());
-                        for (List<MovimentoEstado> col : getVizinhosSelAreaPeca() ) {
-                            System.err.println("tamanho do caminho "+col.size()); 
-                        }
                         if (getVizinhosSelAreaPeca().size() == 0 && getQtdJogadas() > 0) {
                             return true;
                         }
