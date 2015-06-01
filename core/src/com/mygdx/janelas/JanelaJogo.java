@@ -66,6 +66,7 @@ public class JanelaJogo extends Janela {
                  Jogo.getInstance().getJogador1().setQtdJogadas(0);
                 Jogo.getInstance().getJogador2().setTurno(true);
                 jogada.setColor(Jogo.COLORJOGADOR2);
+                Jogo.getInstance().getTabuleiro().promoverPecas();
             }
        }else if(Jogo.getInstance().getJogador2().isTurno()){
             if(clicado != null && Jogo.getInstance().getJogador2().update(Jogo.getInstance().getTabuleiro().getCasa(clicado),estagio)){
@@ -73,6 +74,7 @@ public class JanelaJogo extends Janela {
                  Jogo.getInstance().getJogador2().setQtdJogadas(0);
                  Jogo.getInstance().getJogador1().setTurno(true);
                  jogada.setColor(Jogo.COLORJOGADOR1);
+                 Jogo.getInstance().getTabuleiro().promoverPecas();
             }
        }
     }

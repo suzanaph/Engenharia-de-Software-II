@@ -67,6 +67,7 @@ public class Tabuleiro {
                     matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
                     matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR1);
                     matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR1);//lol isso deve estar dentro de peca !!
+                    matrizCasas[lin][col].peca.dama = true;
                     Jogo.getInstance().getJogador1().getPecas().add(matrizCasas[lin][col].peca);
                 }else if (estado.matriz[lin][col] == Estado.PECAJOGADOR2) {//Adiciona peças nas três últimas linhas do tabuleiro.
                     matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
@@ -77,6 +78,7 @@ public class Tabuleiro {
                     matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
                     matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR2);
                     matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR2);
+                    matrizCasas[lin][col].peca.dama = true;
                     Jogo.getInstance().getJogador2().getPecas().add(matrizCasas[lin][col].peca);
                 }
             }
@@ -110,7 +112,7 @@ public class Tabuleiro {
         int lin = casa.posicao[0];
         int col = casa.posicao[1];
         
-        List<MovimentoEstado> estados = estado.movimentosPossiveis(lin, col, capturado);
+        List<MovimentoEstado> estados = estado.movimentosPossiveis(lin, col, capturado,null);//new MovimentoEstado(matrizCasas[lin][col],estado)
         System.err.println("tamanho saida "+estados.size());
         
         estados = estado.melhorCusto(lin, col, estados);
@@ -166,7 +168,8 @@ public class Tabuleiro {
     * @param novo é o estado obtido através de um movimento.  
     * @param estagio estagio utilizado para deletar a imagem da peça a ser removida.
     */
-    public void setEstado(Estado novo,Stage estagio ){
+    public void setEstado(Estado novo,Stage estagio, boolean dama ){
+       
         estado = novo;
          for (int i = 0; i < estado.matriz.length; i++) {
             for (int j = 0; j < estado.matriz.length; j++) {
@@ -176,6 +179,25 @@ public class Tabuleiro {
                 }
             }
         }
-         
+     
     }
+	public void promoverPecas() {
+		for (int i = 0; i < estado.matriz.length; i++) {
+			if(estado.matriz[0][i]==Estado.PECAJOGADOR2){
+				estado.matriz[0][i] = Estado.DAMAJOGADOR2;
+				matrizCasas[0][i].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR2);
+				matrizCasas[0][i].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR2);
+				matrizCasas[0][i].peca.dama = true;
+			}
+		}
+		for (int i = 0; i < estado.matriz.length; i++) {
+			if(estado.matriz[0][i]==Estado.PECAJOGADOR1){
+				estado.matriz[0][i] = Estado.DAMAJOGADOR1;
+				matrizCasas[0][i].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR1);
+				matrizCasas[0][i].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR1);
+				matrizCasas[0][i].peca.dama = true;
+			}
+		}
+	}
+	
 }

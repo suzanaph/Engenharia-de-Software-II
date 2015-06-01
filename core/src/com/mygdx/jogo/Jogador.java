@@ -143,8 +143,10 @@ public abstract class Jogador {
             Jogo.getInstance().getTabuleiro().estado.exibir();
             //t.t.exibir();
             // se na troca de estado ouver uma captura esse método retorna um booleano para que jogador ganhe mais uma jogada de captura
-            Jogo.getInstance().getTabuleiro().setEstado(t.t, estagio);
+           
+            Jogo.getInstance().getTabuleiro().setEstado(t.t, estagio, p.dama && to.isEmpty());
             if (!to.isEmpty()) {
+            	
                 return false;
             } else {
                 qtdJogadas=0;
@@ -157,7 +159,11 @@ public abstract class Jogador {
         return false;
     }
 
-    /**
+    
+	
+
+
+	/**
      * @return the qtdJogadas
      */
     public int getQtdJogadas() {
