@@ -6,7 +6,6 @@
 package com.mygdx.jogo;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import java.util.ArrayList;
@@ -38,7 +37,6 @@ public abstract class Jogador {
         for (List<MovimentoEstado> vizinho : caminhos) {
             System.out.println("vizinhosss"+ vizinho.get(0).c.posicao[0] + " " +vizinho.get(0).c.posicao[1] );
             if (vizinho.get(0).c.peca == null) {
-                System.out.println("entrou");
                 vizinho.get(0).c.imagem.setColor(Color.GREEN);
             }
         }
@@ -145,7 +143,7 @@ public abstract class Jogador {
             //limitar os movimentos a capturas após uma captura
             setQtdJogadas(qtdJogadas + 1);
             Jogo.getInstance().getTabuleiro().estado.exibir();
-            t.t.exibir();
+            //t.t.exibir();
             // se na troca de estado ouver uma captura esse método retorna um booleano para que jogador ganhe mais uma jogada de captura
             Jogo.getInstance().getTabuleiro().setEstado(t.t, estagio);
             if (!to.isEmpty()) {

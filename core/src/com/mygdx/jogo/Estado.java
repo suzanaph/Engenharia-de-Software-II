@@ -23,15 +23,15 @@ public class Estado {
     public final static int PECAJOGADOR2 = 3;
     public final static int DAMAJOGADOR2 = 4;
     public final static int VAZIA = 0;
+     public final static int ELIMINAR = 5;
     //diz qual o estado que chegou naquele após o movimento de uma peça
-    
 
     public Estado() {
         // tabuleiro inicial
         matriz = new int[][]{
             {1, 0, 1, 0, 1, 0, 1, 0},
             {0, 1, 0, 1, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 0, 1, 0},
+            {1, 0, 1, 0, 2, 0, 1, 0},
             {0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0},
             {0, 3, 0, 3, 0, 3, 0, 3},
@@ -42,10 +42,12 @@ public class Estado {
         qtdPecaJ2 = 12;
     }
 
-       /**Método construtor do estado apartir de uma matriz que representa as posições das peças.
-        * e conta q auntidade de peças de cada jogador.
-    * @param matriz recebe de posições.  
-    */
+    /**
+     * Método construtor do estado apartir de uma matriz que representa as
+     * posições das peças. e conta q auntidade de peças de cada jogador.
+     *
+     * @param matriz recebe de posições.
+     */
     public Estado(int[][] matriz) {
         this.matriz = matriz;
         for (int i = 0; i < matriz.length; i++) {
@@ -59,24 +61,32 @@ public class Estado {
         }
     }
 
-   
-     /**Método utilizado para descobrir a diferença de peças entrem os dois jogadores (custo usado no mimmax),
-    * @return inteiro que respresenta o custo daquele estado.
-    */
+    /**
+     * Método utilizado para descobrir a diferença de peças entrem os dois
+     * jogadores (custo usado no mimmax),
+     *
+     * @return inteiro que respresenta o custo daquele estado.
+     */
     public int saldoJ1() {
         return qtdPecaJ1 - qtdPecaJ2;
     }
-    /**Método utilizado para descobrir a diferença de peças entrem os dois jogadores (custo usado no mimmax),
-    * @return inteiro que respresenta o custo daquele estado.
-    */
+
+    /**
+     * Método utilizado para descobrir a diferença de peças entrem os dois
+     * jogadores (custo usado no mimmax),
+     *
+     * @return inteiro que respresenta o custo daquele estado.
+     */
     public int saldoJ2() {
         return qtdPecaJ2 - qtdPecaJ1;
     }
 
-    /**Método utilizado para criar uma cópia da matriz do estado do tabuleiro para que a copia possa ser editada
-    * sem alaterar a original.
-    * @return matrizCopia copia da matriz pertencente a este estado.
-    */
+    /**
+     * Método utilizado para criar uma cópia da matriz do estado do tabuleiro
+     * para que a copia possa ser editada sem alaterar a original.
+     *
+     * @return matrizCopia copia da matriz pertencente a este estado.
+     */
     public int[][] copia() {
         int[][] matrizCopia = new int[matriz.length][matriz[0].length];
         for (int i = 0; i < matriz.length; i++) {
@@ -88,24 +98,25 @@ public class Estado {
         return matrizCopia;
     }
 
-    /** Método utilizado para verificar todos os movimentos possiveis 
-    * onde cada movimento gera uma tupla casa-estado. 
-    * @param lin linha da casa selecionada pelo jogador
-    * @param  col coluna da casa selecionada pelo jogador
-    * @param capturou limita a verificação de movimentos a apenas capturas
-    * @return estados lista contendo todas as tuplas casa-estado geradas pelos movimentos realizados com sucesso.
-    */
+    /**
+     * Método utilizado para verificar todos os movimentos possiveis onde cada
+     * movimento gera uma tupla casa-estado.
+     *
+     * @param lin linha da casa selecionada pelo jogador
+     * @param col coluna da casa selecionada pelo jogador
+     * @param capturou limita a verificação de movimentos a apenas capturas
+     * @return estados lista contendo todas as tuplas casa-estado geradas pelos
+     * movimentos realizados com sucesso.
+     */
     public List<MovimentoEstado> movimentosPossiveis(int lin, int col, boolean capturou) {
         List<MovimentoEstado> estados = new ArrayList<MovimentoEstado>();
         MovimentoEstado temp = null;
-        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col],this);
+        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
 
         //indica qual tipo de peça pode se capturar
         int eliminar = 0;
-        System.out.println("lin : " + lin + " col:" + col);
         //limitar o jogador 2 a não comer pra trás
         if (matriz[lin][col] == PECAJOGADOR2) {
-            System.out.println("jogador2");
             if (!capturou) {
 
                 temp = moverDID(lin, col);
@@ -121,9 +132,9 @@ public class Estado {
                 }
             }
             eliminar = PECAJOGADOR1;
+            capturaPecaNormal(estados, temp, eliminar, lin, col);
             //limitar o jogador 2 a não comer pra trás
         } else if (matriz[lin][col] == PECAJOGADOR1) {
-            System.out.println("jogador1");
             if (!capturou) {
                 temp = moverDSD(lin, col);
                 if (temp != null) {
@@ -137,42 +148,27 @@ public class Estado {
                 }
             }
             eliminar = PECAJOGADOR2;
+            capturaPecaNormal(estados,  temp, eliminar, lin, col);
+        } else {
+            if (matriz[lin][col] == DAMAJOGADOR1) {
+                eliminar = PECAJOGADOR2;
+            } else if (matriz[lin][col] == DAMAJOGADOR1) {
+                eliminar = PECAJOGADOR1;
+            }
+            if (!capturou) {
+                movimentoDama(estados, temp, lin, col, +1, +1);
+                movimentoDama(estados,  temp, lin, col, -1, -1);
+                movimentoDama(estados, temp, lin, col, +1, -1);
+                movimentoDama(estados,  temp, lin, col, -1, +1);
+            }
+            capturaDama(estados,  temp, eliminar, lin, col, +1, +1);
+            capturaDama(estados, temp, eliminar, lin, col, -1, -1);
+            capturaDama(estados, temp, eliminar, lin, col, +1, -1);
+            capturaDama(estados,  temp, eliminar, lin, col, -1, +1);
         }
+
         
-        // tentar realizar movimento de captura na diagonal superior direita caso não consiga retorna null
-        temp = capturaDSD(lin, col, eliminar);
-        if (temp != null) {
-            estados.add(temp);
-            temp.anterior = anterior;
-            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col + 2, true));
-        }
-        // tentar realizar movimento de captura na diagonal superior esquerda caso não consiga retorna null
-        temp = capturaDSE(lin, col, eliminar);
-        if (temp != null) {
-            
-            estados.add(temp);
-            temp.anterior = anterior;
-            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col - 2, true));
-        }
-        // tentar realizar movimento de captura na diagonal inferior direita caso não consiga retorna null
-        temp = capturaDID(lin, col, eliminar);
-        if (temp != null) {
-            estados.add(temp);
-            temp.anterior = anterior;
-            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col + 2, true));
-        }
-        // tentar realizar movimento de captura na diagonal inferior esquerda caso não consiga retorna null
-        temp = capturaDIE(lin, col, eliminar);
-        if (temp != null) {
-   
-            estados.add(temp);
-            temp.anterior = anterior;
-            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
-            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col - 2, true));
-        }
+
         return estados;
     }
 
@@ -230,7 +226,7 @@ public class Estado {
                 //deletar peça capturada
                 cop[lin - 1][col + 1] = 0;
                 Estado novo = new Estado(cop);
-               return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin - 2][col + 2], novo);
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin - 2][col + 2], novo);
             } else {
                 return null;
             }
@@ -270,6 +266,25 @@ public class Estado {
                 cop[lin][col] = 0;
                 Estado novo = new Estado(cop);
                 return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin + 1][col + 1], novo);
+
+            } else {
+                return null;
+            }
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+    // movimento simples de Dama  
+
+    public MovimentoEstado moverDama(int linDestino, int colDestino, int linOrigem, int colOrigem) {
+        try {
+            int[][] cop = copia();
+            if (cop[linDestino][colDestino] == 0) {
+                // mover peça da casa que ela estava para a nova 
+                cop[linDestino][colDestino] = cop[linOrigem][colOrigem];
+                cop[linOrigem][colOrigem] = 0;
+                Estado novo = new Estado(cop);
+                return new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[linDestino][colDestino], novo);
 
             } else {
                 return null;
@@ -341,18 +356,25 @@ public class Estado {
         List<MovimentoEstado> movimentos = new ArrayList<MovimentoEstado>();
         movimentos.add(other);
         while (inicial.anterior != null && !inicial.anterior.t.equals(this)) {
+            
             inicial = inicial.anterior;
-            movimentos.add(0,inicial);
+            movimentos.add(0, inicial);
         }
         return movimentos;
     }
- /** Método utilizado para verificar dos estados encontrado pelos movimentos possives quais possuem o maior valor de custo
-  * *para o jogador , de acordo com a regra da lei da maioria para que limite seus movimentos disponiveis aos movimentos que capturam mais peças
-    * @param lin linha da casa selecionada pelo jogador
-    * @param  col coluna da casa selecionada pelo jogador
-    * @param estados lista dos estados gerados pelos movimentos possiveis.
-    * @return melhor lista contendo todas as tuplas casa-estado ,cujo estado possui o maior custo.
-    */
+
+    /**
+     * Método utilizado para verificar dos estados encontrado pelos movimentos
+     * possives quais possuem o maior valor de custo *para o jogador , de acordo
+     * com a regra da lei da maioria para que limite seus movimentos disponiveis
+     * aos movimentos que capturam mais peças
+     *
+     * @param lin linha da casa selecionada pelo jogador
+     * @param col coluna da casa selecionada pelo jogador
+     * @param estados lista dos estados gerados pelos movimentos possiveis.
+     * @return melhor lista contendo todas as tuplas casa-estado ,cujo estado
+     * possui o maior custo.
+     */
     public List<MovimentoEstado> melhorCusto(int lin, int col, List<MovimentoEstado> estados) {
         List<MovimentoEstado> melhor = new ArrayList<MovimentoEstado>();
         int custo = Integer.MIN_VALUE;
@@ -368,7 +390,7 @@ public class Estado {
                 }
             }
         } else if (matriz[lin][col] == PECAJOGADOR2 || matriz[lin][col] == DAMAJOGADOR2) {
-             for (MovimentoEstado estado : estados) {
+            for (MovimentoEstado estado : estados) {
                 if (custo < estado.getCustoJ2()) {
                     custo = estado.getCustoJ2();
                 }
@@ -383,8 +405,6 @@ public class Estado {
         return melhor;
     }
 
-  
-
     //por questão de teste exibir o 
     public void exibir() {
         for (int i = 0; i < matriz.length; i++) {
@@ -394,5 +414,106 @@ public class Estado {
             }
         }
         System.out.println("");
+    }
+
+    private void movimentoDama(List<MovimentoEstado> estados, MovimentoEstado temp, int lin, int col, int passoI, int passoJ) {
+        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
+        int i = lin + passoI;
+        int j = col + passoJ;
+        while ((i < matriz.length && j < matriz.length)
+                && (i < matriz.length && j >= 0)
+                && (i >= 0 && j < matriz.length)
+                && (i >= 0 && j >= 0)) {
+            System.out.println(" damas lin : " + i + " col:" + j);
+            temp = moverDama(i, j, lin, col);
+            if (temp != null) {
+                temp.t.exibir();
+                estados.add(temp);
+                temp.anterior = anterior;
+            } else {
+                break;
+            }
+            i += passoI;
+            j += passoJ;
+        }
+    }
+
+    private void capturaDama(List<MovimentoEstado> estados, MovimentoEstado temp, int eliminar, int lin, int col, int passoI, int passoJ) {
+         MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
+        int i = lin + passoI;
+         int j = col + passoJ;
+         int[][] cop = copia();
+        while ((i < matriz.length && j < matriz.length)
+                && (i < matriz.length && j >= 0)
+                && (i >= 0 && j < matriz.length)
+                && (i >= 0 && j >= 0)
+                &&(i+passoI < matriz.length && j+passoJ < matriz.length)
+                && (i+passoI < matriz.length && j+passoJ >= 0)
+                && (i+passoI >= 0 && j+passoJ < matriz.length)
+                && (i+passoI >= 0 && j+passoJ >= 0)
+                ) {
+            if((cop[i][j]==eliminar || cop[i][j]==eliminar+1 )&&cop[i+passoI][j+passoJ]==0){
+                cop[i+passoI][j+passoJ] = cop[lin][col];
+                cop[lin][col] = 0;
+                //deletar peça capturada
+                cop[i][j] = ELIMINAR;
+                Estado novo = new Estado(cop);
+                temp = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[i+passoI][j+passoJ],novo);
+                estados.add(temp);
+                temp.anterior = anterior;
+                estados.addAll(temp.t.movimentosPossiveis(i+passoI, j+passoJ, true));
+            }else if((cop[i][j]==eliminar || cop[i][j]==eliminar+1 )&&cop[i+passoI][j+passoJ]!=0){
+                break;
+            }
+            i += passoI;
+            j += passoJ;
+        }
+    }
+
+    private void capturaPecaNormal(List<MovimentoEstado> estados,  MovimentoEstado temp, int eliminar, int lin, int col) {
+        // tentar realizar movimento de captura na diagonal superior direita caso não consiga retorna null
+        MovimentoEstado anterior = new MovimentoEstado(Jogo.getInstance().getTabuleiro().matrizCasas[lin][col], this);
+        temp = capturaDSD(lin, col, eliminar);
+        if (temp != null) {
+
+            estados.add(temp);
+            temp.anterior = anterior;
+            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
+            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col + 2, true));
+        }
+    // tentar realizar movimento de captura na diagonal superior esquerda caso não consiga retorna null
+        temp = capturaDSE(lin, col, eliminar);
+        if (temp != null) {
+
+            estados.add(temp);
+            temp.anterior = anterior;
+            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
+            estados.addAll(temp.t.movimentosPossiveis(lin + 2, col - 2, true));
+        }
+        // tentar realizar movimento de captura na diagonal inferior direita caso não consiga retorna null
+        temp = capturaDID(lin, col, eliminar);
+        if (temp != null) {
+            estados.add(temp);
+            temp.anterior = anterior;
+            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
+            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col + 2, true));
+        }
+        // tentar realizar movimento de captura na diagonal inferior esquerda caso não consiga retorna null
+        temp = capturaDIE(lin, col, eliminar);
+        if (temp != null) {
+
+            estados.add(temp);
+            temp.anterior = anterior;
+            //caso haja captura de peça, checar todos os movimentos que a peça pode realizar após se deslocar
+            estados.addAll(temp.t.movimentosPossiveis(lin - 2, col - 2, true));
+        }
+    }
+    // métodos para ajudar a debugar 
+    public void exibirCaminho(MovimentoEstado inicial){
+         while (inicial.anterior != null && !inicial.anterior.t.equals(this)) {
+            System.err.println(inicial.c.posicao[0]+":"+inicial.c.posicao[1] +"seu anterior é "+ 
+                    inicial.anterior.c.posicao[0] +":"+inicial.anterior.c.posicao[1]);
+            inicial = inicial.anterior;
+        }
     }
 }

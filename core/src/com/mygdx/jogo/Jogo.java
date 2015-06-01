@@ -10,6 +10,8 @@ public class Jogo extends Game {
     public final static int HUMANO =1;
     public final static Color COLORJOGADOR1 =Color.ORANGE;
     public final static Color COLORJOGADOR2 =Color.TEAL;
+    public final static Color COLORDAMAJOGADOR1 =Color.MAROON;
+    public final static Color COLORDAMAJOGADOR2 =Color.PURPLE;
     private static Jogo instance;
     private Music musica;
     private int dificuldade;

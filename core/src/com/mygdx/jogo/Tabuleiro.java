@@ -56,18 +56,28 @@ public class Tabuleiro {
                 matrizCasas[lin][col] = new Casa(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin, cor);
                 //Salva as posições da matriz na casa.
                 matrizCasas[lin][col].setPosicaoMatriz(lin, col);
-                if (estado.matriz[lin][col] == Estado.PECAJOGADOR1) {
+                if (estado.matriz[lin][col] == Estado.PECAJOGADOR1 ) {
                     //Adiciona peças nas três primeiras linhas do tabuleiro.
                     matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
                     matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR1);
                     matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR1);//lol isso deve estar dentro de peca !!
                     Jogo.getInstance().getJogador1().getPecas().add(matrizCasas[lin][col].peca);
-                } else if (estado.matriz[lin][col] == Estado.PECAJOGADOR2) {//Adiciona peças nas três últimas linhas do tabuleiro.
+                }else if(estado.matriz[lin][col] == Estado.DAMAJOGADOR1){
+                    //Adiciona peças nas três primeiras linhas do tabuleiro.
+                    matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
+                    matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR1);
+                    matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR1);//lol isso deve estar dentro de peca !!
+                    Jogo.getInstance().getJogador1().getPecas().add(matrizCasas[lin][col].peca);
+                }else if (estado.matriz[lin][col] == Estado.PECAJOGADOR2) {//Adiciona peças nas três últimas linhas do tabuleiro.
                     matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
                     matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORJOGADOR2);
                     matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORJOGADOR2);
                     Jogo.getInstance().getJogador2().getPecas().add(matrizCasas[lin][col].peca);
-
+                }else if(estado.matriz[lin][col] == Estado.DAMAJOGADOR2){
+                    matrizCasas[lin][col].peca = new Peca(posX + Casa.LARGURA * col, posY + Casa.ALTURA * lin);
+                    matrizCasas[lin][col].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR2);
+                    matrizCasas[lin][col].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR2);
+                    Jogo.getInstance().getJogador2().getPecas().add(matrizCasas[lin][col].peca);
                 }
             }
         }
@@ -99,8 +109,12 @@ public class Tabuleiro {
         List<List<MovimentoEstado>> saida = new ArrayList<List<MovimentoEstado>>();
         int lin = casa.posicao[0];
         int col = casa.posicao[1];
+        
         List<MovimentoEstado> estados = estado.movimentosPossiveis(lin, col, capturado);
+        System.err.println("tamanho saida "+estados.size());
+        
         estados = estado.melhorCusto(lin, col, estados);
+         System.err.println("tamanho melhor custo "+estados.size());
         for (MovimentoEstado est : estados) {
             saida.add(estado.ordenar(est));
         }
