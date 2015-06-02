@@ -30,7 +30,12 @@ public class Humano extends Jogador {
         } else {
             
             if (getSelAreaPeca() != null && getCaminhoEscolhido() != null) {
-                return moverPeca(estagio);
+                 if(moverPeca(estagio)){
+                anterior = null;
+                return true;
+                }else{
+                	return false;
+                }
             } else if (selecionada != null) {
 
                 if (selecionada.peca != null && selecionada != anterior) {// fazer algo para isso executar uma unica vez
