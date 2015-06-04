@@ -144,7 +144,7 @@ public abstract class Jogador {
             //t.t.exibir();
             // se na troca de estado ouver uma captura esse método retorna um booleano para que jogador ganhe mais uma jogada de captura
            
-            Jogo.getInstance().getTabuleiro().setEstado(t.t, estagio, p.dama && to.isEmpty());
+            Jogo.getInstance().getTabuleiro().setEstado(t, estagio);
             if (!to.isEmpty()) {
             	
                 return false;

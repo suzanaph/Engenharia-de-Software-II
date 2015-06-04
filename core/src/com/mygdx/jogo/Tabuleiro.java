@@ -168,17 +168,14 @@ public class Tabuleiro {
     * @param novo é o estado obtido através de um movimento.  
     * @param estagio estagio utilizado para deletar a imagem da peça a ser removida.
     */
-    public void setEstado(Estado novo,Stage estagio, boolean dama ){
+    public void setEstado(MovimentoEstado novo,Stage estagio){
        
-        estado = novo;
-         for (int i = 0; i < estado.matriz.length; i++) {
-            for (int j = 0; j < estado.matriz.length; j++) {
-                if (matrizCasas[i][j].peca != null && estado.matriz[i][j]==0) {
-                   estagio.getActors().removeValue(matrizCasas[i][j].peca.imagem,true);
-                   matrizCasas[i][j].peca=null;
-                }
-            }
+        estado = novo.t;
+        if(novo.eliminar!=null){
+            estagio.getActors().removeValue(novo.eliminar.peca.imagem,true);
+                  novo.eliminar.peca=null;
         }
+        
      
     }
 	public void promoverPecas() {

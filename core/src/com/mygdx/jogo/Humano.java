@@ -31,7 +31,7 @@ public class Humano extends Jogador {
             
             if (getSelAreaPeca() != null && getCaminhoEscolhido() != null) {
                  if(moverPeca(estagio)){
-                anterior = null;
+                	 anterior = null;
                 return true;
                 }else{
                 	return false;
