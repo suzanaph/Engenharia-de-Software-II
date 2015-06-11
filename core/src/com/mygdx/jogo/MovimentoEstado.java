@@ -29,4 +29,5 @@ public class MovimentoEstado {
     public int getCustoJ2(){
         return t.saldoJ2();
     }
+   
 }

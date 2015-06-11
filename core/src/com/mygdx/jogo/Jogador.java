@@ -128,27 +128,28 @@ public abstract class Jogador {
     public boolean moverPeca(Stage estagio) {
         if (selAreaPeca != null && caminhoEscolhido != null) {
             List<MovimentoEstado> to = caminhoEscolhido;
-            MovimentoEstado t = to.get(0);
+            MovimentoEstado alvo = to.get(0);
             Peca p = selAreaPeca.peca;
             
-            p.imagem.addAction(Actions.sequence(Actions.moveTo(t.c.imagem.getX(), t.c.imagem.getY(), 0.5f)));
-            t.c.peca = p;
-            t.c.peca.imagem.setColor(p.getColorOriginal());
+            p.imagem.addAction(Actions.sequence(Actions.moveTo(alvo.c.imagem.getX(), alvo.c.imagem.getY(), 0.5f)));
+            alvo.c.peca = p;
+            alvo.c.peca.imagem.setColor(p.getColorOriginal());
             selAreaPeca.peca = null;
-            selAreaPeca = t.c;
+            selAreaPeca = alvo.c;
             ocultarVizinhos();
-            to.remove(t);
+            // removendo o passo ja dado
+            to.remove(alvo);
             //limitar os movimentos a capturas após uma captura
             setQtdJogadas(qtdJogadas + 1);
             Jogo.getInstance().getTabuleiro().estado.exibir();
             //t.t.exibir();
-            // se na troca de estado ouver uma captura esse método retorna um booleano para que jogador ganhe mais uma jogada de captura
-           
-            Jogo.getInstance().getTabuleiro().setEstado(t, estagio);
-            if (!to.isEmpty()) {
-            	
+            // se na troca de estado ouver uma captura esse método retorna um booleano para que jogador ganhe mais uma jogada de captura         
+            Jogo.getInstance().getTabuleiro().setEstado(alvo, estagio);
+       
+             if (!to.isEmpty()) {
                 return false;
             } else {
+            	 
                 qtdJogadas=0;
                 selAreaPeca = null;
                 caminhoEscolhido = null;

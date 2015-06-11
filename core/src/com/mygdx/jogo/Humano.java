@@ -40,7 +40,8 @@ public class Humano extends Jogador {
 
                 if (selecionada.peca != null && selecionada != anterior) {// fazer algo para isso executar uma unica vez
                     if (getPecas().contains(selecionada.peca)) {
-                        if (getSelAreaPeca() != null && getSelAreaPeca().peca != null) {
+                    	// caso vc tenha uma pe�a selecionada antes e selecione outro vc apaga a sele��o
+                        if (getSelAreaPeca() != null && getSelAreaPeca().peca != null && getVizinhosSelAreaPeca()!=null) {
                             getSelAreaPeca().peca.imagem.setColor(getSelAreaPeca().peca.getColorOriginal());
                             ocultarVizinhos();
                         }
