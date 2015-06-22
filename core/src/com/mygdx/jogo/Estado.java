@@ -17,6 +17,9 @@ public class Estado {
 	int[][] matriz;
 	int qtdPecaJ1;
 	int qtdPecaJ2;
+	int qtdDamaJ1;
+	int qtdDamaJ2;
+
 	// Valores para representar os tipos de objetos que poderão estar nas casas
 	// do tabuleiro
 	public final static int PECAJOGADOR1 = 1;
@@ -24,31 +27,24 @@ public class Estado {
 	public final static int PECAJOGADOR2 = 3;
 	public final static int DAMAJOGADOR2 = 4;
 	public final static int VAZIA = 0;
-	public final static int ELIMINAR = 5;
 
 	// diz qual o estado que chegou naquele após o movimento de uma peça
 
 	public Estado() {
 		// tabuleiro inicial
 		matriz = new int[][] {
-{0,0,0,0,0,0,0,0},
-{0,0,0,3,0,0,0,0},
-{0,0,0,0,0,0,0,0},
-{0,0,0,3,0,3,0,0},
-{0,0,1,0,0,0,0,0},
-{0,0,0,0,0,0,0,0},
-{0,0,0,0,0,0,0,0},
-{0,0,0,0,0,0,0,0},
-                    
-//{1,0,1,0,1,0,1,0},
-//{0,1,0,1,0,1,0,1},
-//{1,0,1,0,2,0,1,0},
-//{0,0,0,3,0,3,0,0},
-//{0,0,0,0,0,0,0,0},
-//{0,3,0,3,0,3,0,3},
-//{3,0,3,0,0,0,3,0},
-//{0,3,0,3,0,3,0,0},
-				};
+
+		{ 1, 0, 1, 0, 1, 0, 1, 0 },// 0
+				{ 0, 1, 0, 1, 0, 1, 0, 1 },// 1
+				{ 1, 0, 1, 0, 1, 0, 1, 0 },// 2
+				{ 0, 0, 0, 0, 0, 0, 0, 0 },// 3
+				{ 0, 0, 0, 0, 0, 0, 0, 0 },// 4
+				{ 0, 3, 0, 3, 0, 3, 0, 3 },// 5
+				{ 3, 0, 3, 0, 3, 0, 3, 0 },// 6
+				{ 0, 3, 0, 3, 0, 3, 0, 3 },// 7
+		// 0 1 2 3 4 5 6 7
+
+		};
 		qtdPecaJ1 = 12;
 		qtdPecaJ2 = 12;
 	}
@@ -64,13 +60,17 @@ public class Estado {
 		this.matriz = matriz;
 		for (int i = 0; i < matriz.length; i++) {
 			for (int j = 0; j < matriz[i].length; j++) {
-				if (matriz[i][j] == PECAJOGADOR1
-						|| matriz[i][j] == DAMAJOGADOR1) {
+				if (matriz[i][j] == PECAJOGADOR1) {
 					qtdPecaJ1++;
-				} else if (matriz[i][j] == PECAJOGADOR2
-						|| matriz[i][j] == DAMAJOGADOR2) {
+				} else if (matriz[i][j] == DAMAJOGADOR1) {
+					qtdDamaJ1 += 1;
+
+				} else if (matriz[i][j] == PECAJOGADOR2) {
 					qtdPecaJ2++;
+				} else if (matriz[i][j] == DAMAJOGADOR2) {
+					qtdDamaJ2 += 1;
 				}
+
 			}
 		}
 	}
@@ -82,7 +82,7 @@ public class Estado {
 	 * @return inteiro que respresenta o custo daquele estado.
 	 */
 	public int saldoJ1() {
-		return qtdPecaJ1 - qtdPecaJ2;
+		return (qtdPecaJ1 + qtdDamaJ1 * 2) - (qtdPecaJ2 + qtdDamaJ2 * 2);
 	}
 
 	/**
@@ -92,7 +92,15 @@ public class Estado {
 	 * @return inteiro que respresenta o custo daquele estado.
 	 */
 	public int saldoJ2() {
-		return qtdPecaJ2 - qtdPecaJ1;
+		return (qtdPecaJ2 + qtdDamaJ2 * 2) - (qtdPecaJ1 + qtdDamaJ1 * 2);
+	}
+
+	public int diferencaJ2() {
+		return (qtdPecaJ2 + qtdDamaJ2) - (qtdPecaJ1 + qtdDamaJ1);
+	}
+
+	public int diferencaJ1() {
+		return (qtdPecaJ1 + qtdDamaJ1) - (qtdPecaJ2 + qtdDamaJ2);
 	}
 
 	/**
@@ -102,6 +110,17 @@ public class Estado {
 	 * @return matrizCopia copia da matriz pertencente a este estado.
 	 */
 	public int[][] copia() {
+		int[][] matrizCopia = new int[matriz.length][matriz[0].length];
+		for (int i = 0; i < matriz.length; i++) {
+			for (int j = 0; j < matriz[i].length; j++) {
+				matrizCopia[i][j] = matriz[i][j];
+			}
+		}
+
+		return matrizCopia;
+	}
+
+	public int[][] copia(int[][] matriz) {
 		int[][] matrizCopia = new int[matriz.length][matriz[0].length];
 		for (int i = 0; i < matriz.length; i++) {
 			for (int j = 0; j < matriz[i].length; j++) {
@@ -129,7 +148,21 @@ public class Estado {
 			boolean capturou, MovimentoEstado anterior) {
 		List<MovimentoEstado> estados = new ArrayList<MovimentoEstado>();
 		MovimentoEstado temp = null;
-
+		if(!capturou)// s� calcula pra jogadas de andar
+		for (int i = 0; i < matriz.length; i++) {
+			for (int j = 0; j < matriz.length; j++) {
+				if (lin != i || col != j) {
+					if (((matriz[lin][col] == PECAJOGADOR2 || matriz[lin][col] == DAMAJOGADOR2) && (matriz[i][j] == PECAJOGADOR2 || matriz[i][j] == DAMAJOGADOR2))
+							|| ((matriz[lin][col] == PECAJOGADOR1 || matriz[lin][col] == DAMAJOGADOR1) && (matriz[i][j] == PECAJOGADOR1 || matriz[i][j] == DAMAJOGADOR1))) {
+						if (!movimentosPossiveis(i, j, true, anterior)
+								.isEmpty()) {
+							capturou = true;
+							break;
+						}
+					}
+				}
+			}
+		}
 		// indica qual tipo de peça pode se capturar
 		int eliminar = 0;
 		// limitar o jogador 2 a não comer pra trás
@@ -167,17 +200,18 @@ public class Estado {
 			eliminar = PECAJOGADOR2;
 
 			capturaPecaNormal(estados, anterior, eliminar, lin, col);
-		} else {
+		} else if (matriz[lin][col] == DAMAJOGADOR1
+				|| matriz[lin][col] == DAMAJOGADOR2) {
 			if (matriz[lin][col] == DAMAJOGADOR1) {
 				eliminar = PECAJOGADOR2;
 			} else if (matriz[lin][col] == DAMAJOGADOR2) {
 				eliminar = PECAJOGADOR1;
 			}
 			if (!capturou) {
-				movimentoDama(estados, anterior, lin, col, +1, +1);//dsd
-				movimentoDama(estados, anterior, lin, col, -1, -1);//die
-				movimentoDama(estados, anterior, lin, col, +1, -1);//dse
-				movimentoDama(estados, anterior, lin, col, -1, +1);//did
+				movimentoDama(estados, anterior, lin, col, +1, +1);// dsd
+				movimentoDama(estados, anterior, lin, col, -1, -1);// die
+				movimentoDama(estados, anterior, lin, col, +1, -1);// dse
+				movimentoDama(estados, anterior, lin, col, -1, +1);// did
 			}
 			capturaDama(estados, anterior, eliminar, lin, col, +1, +1);
 			capturaDama(estados, anterior, eliminar, lin, col, +1, -1);
@@ -189,13 +223,17 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal superior direita
-	public MovimentoEstado capturaDSD(int lin, int col, int jogador,MovimentoEstado anterior) {
+	public MovimentoEstado capturaDSD(int lin, int col, int jogador,
+			MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin + 1][col + 1] == jogador || cop[lin + 1][col + 1] == jogador + 1)
-					&& cop[lin + 2][col + 2] == 0 && !checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin+1][col+1],anterior)) {
+					&& cop[lin + 2][col + 2] == 0
+					&& !checar(
+							Jogo.getInstance().getTabuleiro().matrizCasas[lin + 1][col + 1],
+							anterior)) {
 				// mover peça da casa que ela estava para a nova
 				cop[lin + 2][col + 2] = cop[lin][col];
 				cop[lin][col] = 0;
@@ -215,14 +253,19 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal superior esquerda
-	public MovimentoEstado capturaDSE(int lin, int col, int jogador,MovimentoEstado anterior) {
+	public MovimentoEstado capturaDSE(int lin, int col, int jogador,
+			MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin + 1][col - 1] == jogador || cop[lin + 1][col - 1] == jogador + 1)
-					&& cop[lin + 2][col - 2] == 0 &&!checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin+1][col-1],anterior)) {
+					&& cop[lin + 2][col - 2] == 0
+					&& !checar(
+							Jogo.getInstance().getTabuleiro().matrizCasas[lin + 1][col - 1],
+							anterior)) {
 				// mover peça da casa que ela estava para a nova
+
 				cop[lin + 2][col - 2] = cop[lin][col];
 				cop[lin][col] = 0;
 				// deletar peça capturada
@@ -241,14 +284,19 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal inferior direita
-	public MovimentoEstado capturaDID(int lin, int col, int jogador,MovimentoEstado anterior) {
+	public MovimentoEstado capturaDID(int lin, int col, int jogador,
+			MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin - 1][col + 1] == jogador || cop[lin - 1][col + 1] == jogador + 1)
-					&& cop[lin - 2][col + 2] == 0&&!checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin-1][col+1],anterior)) {
+					&& cop[lin - 2][col + 2] == 0
+					&& !checar(
+							Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col + 1],
+							anterior)) {
 				// mover peça da casa que ela estava para a nova
+
 				cop[lin - 2][col + 2] = cop[lin][col];
 				cop[lin][col] = 0;
 				// deletar peça capturada
@@ -267,14 +315,19 @@ public class Estado {
 	}
 
 	// método captura usando peça normal na diagonal inferior esquerda
-	public MovimentoEstado capturaDIE(int lin, int col, int jogador,MovimentoEstado anterior) {
+	public MovimentoEstado capturaDIE(int lin, int col, int jogador,
+			MovimentoEstado anterior) {
 		try {
 			int[][] cop = copia();
 			// checa se a casa possui uma peça do jogador inimigo para ser
 			// capturada e se a casa após essa esta vazia.
 			if ((cop[lin - 1][col - 1] == jogador || cop[lin - 1][col - 1] == jogador + 1)
-					&& cop[lin - 2][col - 2] == 0 && !checar(Jogo.getInstance().getTabuleiro().matrizCasas[lin-1][col-1],anterior)) {
+					&& cop[lin - 2][col - 2] == 0
+					&& !checar(
+							Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col - 1],
+							anterior)) {
 				// mover peça da casa que ela estava para a nova
+
 				cop[lin - 2][col - 2] = cop[lin][col];
 				cop[lin][col] = 0;
 				// deletar peça capturada
@@ -282,7 +335,7 @@ public class Estado {
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
 						Jogo.getInstance().getTabuleiro().matrizCasas[lin - 2][col - 2],
-						Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col -1],
+						Jogo.getInstance().getTabuleiro().matrizCasas[lin - 1][col - 1],
 						novo);
 			} else {
 				return null;
@@ -299,7 +352,13 @@ public class Estado {
 			int[][] cop = copia();
 			if (cop[lin + 1][col + 1] == 0) {
 				// mover peça da casa que ela estava para a nova
-				cop[lin + 1][col + 1] = cop[lin][col];
+				int valor = cop[lin][col];
+				if (cop[lin][col] == PECAJOGADOR1 && lin + 1 == 7) {
+					valor = DAMAJOGADOR1;
+				} else if (cop[lin][col] == PECAJOGADOR2 && lin + 1 == 0) {
+					valor = DAMAJOGADOR2;
+				}
+				cop[lin + 1][col + 1] = valor;
 				cop[lin][col] = 0;
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
@@ -344,7 +403,13 @@ public class Estado {
 			int[][] cop = copia();
 			if (cop[lin + 1][col - 1] == 0) {
 				// mover peça da casa que ela estava para a nova
-				cop[lin + 1][col - 1] = cop[lin][col];
+				int valor = cop[lin][col];
+				if (cop[lin][col] == PECAJOGADOR1 && lin + 1 == 7) {
+					valor = DAMAJOGADOR1;
+				} else if (cop[lin][col] == PECAJOGADOR2 && lin + 1 == 0) {
+					valor = DAMAJOGADOR2;
+				}
+				cop[lin + 1][col - 1] = valor;
 				cop[lin][col] = 0;
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
@@ -366,7 +431,13 @@ public class Estado {
 			int[][] cop = copia();
 			if (cop[lin - 1][col + 1] == 0) {
 				// mover peça da casa que ela estava para a nova
-				cop[lin - 1][col + 1] = cop[lin][col];
+				int valor = cop[lin][col];
+				if (cop[lin][col] == PECAJOGADOR1 && lin - 1 == 7) {
+					valor = DAMAJOGADOR1;
+				} else if (cop[lin][col] == PECAJOGADOR2 && lin - 1 == 0) {
+					valor = DAMAJOGADOR2;
+				}
+				cop[lin - 1][col + 1] = valor;
 				cop[lin][col] = 0;
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
@@ -387,7 +458,13 @@ public class Estado {
 			int[][] cop = copia();
 			if (cop[lin - 1][col - 1] == 0) {
 				// mover peça da casa que ela estava para a nova
-				cop[lin - 1][col - 1] = cop[lin][col];
+				int valor = cop[lin][col];
+				if (cop[lin][col] == PECAJOGADOR1 && lin - 1 == 7) {
+					valor = DAMAJOGADOR1;
+				} else if (cop[lin][col] == PECAJOGADOR2 && lin - 1 == 0) {
+					valor = DAMAJOGADOR2;
+				}
+				cop[lin - 1][col - 1] = valor;
 				cop[lin][col] = 0;
 				Estado novo = new Estado(cop);
 				return new MovimentoEstado(
@@ -408,7 +485,8 @@ public class Estado {
 		MovimentoEstado inicial = other;
 		List<MovimentoEstado> movimentos = new ArrayList<MovimentoEstado>();
 		movimentos.add(other);
-		while (inicial.anterior != null && !inicial.anterior.t.equals(this)) {
+		while (inicial.anterior != null) { // &&
+											// !inicial.anterior.t.equals(this)
 
 			inicial = inicial.anterior;
 			movimentos.add(0, inicial);
@@ -438,24 +516,24 @@ public class Estado {
 		if (matriz[lin][col] == PECAJOGADOR1
 				|| matriz[lin][col] == DAMAJOGADOR1) {
 			for (MovimentoEstado estado : estados) {
-				if (custo < estado.getCustoJ1()) {
-					custo = estado.getCustoJ1();
+				if (custo < estado.getDiferencaJ1()) {
+					custo = estado.getDiferencaJ1();
 				}
 			}
 			for (MovimentoEstado estado : estados) {
-				if (custo == estado.getCustoJ1()) {
+				if (custo == estado.getDiferencaJ1()) {
 					melhor.add(estado);
 				}
 			}
 		} else if (matriz[lin][col] == PECAJOGADOR2
 				|| matriz[lin][col] == DAMAJOGADOR2) {
 			for (MovimentoEstado estado : estados) {
-				if (custo < estado.getCustoJ2()) {
-					custo = estado.getCustoJ2();
+				if (custo < estado.getDiferencaJ2()) {
+					custo = estado.getDiferencaJ2();
 				}
 			}
 			for (MovimentoEstado estado : estados) {
-				if (custo == estado.getCustoJ2()) {
+				if (custo == estado.getDiferencaJ2()) {
 					melhor.add(estado);
 				}
 			}
@@ -470,11 +548,11 @@ public class Estado {
 			System.out.println("");
 			for (int j = 0; j < matriz[i].length; j++) {
 				if (j == 0) {
-					System.out.print("{"+matriz[i][j] + ",");
+					System.out.print("{" + matriz[i][j] + ",");
 				} else if (j == matriz.length - 1) {
-					 System.out.print(matriz[i][j] + "},");
-				}else{
-					 System.out.print(matriz[i][j] + ",");
+					System.out.print(matriz[i][j] + "},");
+				} else {
+					System.out.print(matriz[i][j] + ",");
 				}
 			}
 		}
@@ -491,7 +569,7 @@ public class Estado {
 				&& (i >= 0 && j < matriz.length) && (i >= 0 && j >= 0)) {
 			temp = moverDama(i, j, lin, col);
 			if (temp != null) {
-				temp.t.exibir();
+				// temp.t.exibir();
 				estados.add(temp);
 				temp.anterior = anterior;
 			} else {
@@ -509,36 +587,47 @@ public class Estado {
 		int i = lin + passoI;
 		int j = col + passoJ;
 		int[][] cop = copia();
-		while ((i < matriz.length && j < matriz.length)
-				&& (i < matriz.length && j >= 0)
-				&& (i >= 0 && j < matriz.length) && (i >= 0 && j >= 0)
-				&& (i + passoI < matriz.length && j + passoJ < matriz.length)
-				&& (i + passoI < matriz.length && j + passoJ >= 0)
-				&& (i + passoI >= 0 && j + passoJ < matriz.length)
-				&& (i + passoI >= 0 && j + passoJ >= 0)) {
-			if ((cop[i][j] == eliminar || cop[i][j] == eliminar + 1)
-					&& cop[i + passoI][j + passoJ] == 0) {
-				if( !checar(Jogo.getInstance().getTabuleiro().matrizCasas[i][j],anterior)){
-				cop[i + passoI][j + passoJ] = cop[lin][col];
+		while (checaDependencias(i, j, passoI, passoJ)) {
+			if (checar(Jogo.getInstance().getTabuleiro().matrizCasas[i][j],
+					anterior)) {
+				break;
+			}
+			if ((cop[i][j] == eliminar || cop[i][j] == eliminar + 1)) {
+
+				int valor = cop[lin][col];
 				cop[lin][col] = 0;
 				// deletar peça capturada
-				cop[i][j] =0;
-				Estado novo = new Estado(cop);
-				temp = new MovimentoEstado(
-						Jogo.getInstance().getTabuleiro().matrizCasas[i
-								+ passoI][j + passoJ],
-								Jogo.getInstance().getTabuleiro().matrizCasas[i][j],
-								novo);
-				estados.add(temp);
-				temp.anterior = anterior;
-				estados.addAll(temp.t.movimentosPossiveis(i + passoI, j
-						+ passoJ, true, temp));
-					break;
-				}else{
-					break;
+				cop[i][j] = 0;
+				Casa remover = Jogo.getInstance().getTabuleiro().matrizCasas[i][j];
+				int qtdCapturas = 0;
+				while (checaDependencias(i, j, passoI, passoJ)
+						&& cop[i + passoI][j + passoJ] == 0) {
+					int[][] copia = copia(cop);
+					copia[i + passoI][j + passoJ] = valor;
+					Estado novo = new Estado(copia);
+					temp = new MovimentoEstado(
+							Jogo.getInstance().getTabuleiro().matrizCasas[i
+									+ passoI][j + passoJ], remover, novo);
+					temp.anterior = anterior;
+					List<MovimentoEstado> saida = temp.t.movimentosPossiveis(i
+							+ passoI, j + passoJ, true, temp);
+
+					if (qtdCapturas == 0 || saida.size() > 0) {
+						estados.add(temp);
+						estados.addAll(saida);
+						qtdCapturas++;
+					}
+					i += passoI;
+					j += passoJ;
 				}
-			} else if ((cop[i][j] == eliminar || cop[i][j] == eliminar + 1)
+				break;
+			}
+
+			else if ((cop[i][j] == eliminar || cop[i][j] == eliminar + 1)
 					&& cop[i + passoI][j + passoJ] != 0) {
+				break;
+			} else if ((eliminar == PECAJOGADOR1 && (cop[i][j] == PECAJOGADOR2 || cop[i][j] == DAMAJOGADOR2))
+					|| (eliminar == PECAJOGADOR2 && (cop[i][j] == PECAJOGADOR1 || cop[i][j] == DAMAJOGADOR1))) {
 				break;
 			}
 			i += passoI;
@@ -546,11 +635,21 @@ public class Estado {
 		}
 	}
 
+	private boolean checaDependencias(int i, int j, int passoI, int passoJ) {
+		return (i < matriz.length && j < matriz.length)
+				&& (i < matriz.length && j >= 0)
+				&& (i >= 0 && j < matriz.length) && (i >= 0 && j >= 0)
+				&& (i + passoI < matriz.length && j + passoJ < matriz.length)
+				&& (i + passoI < matriz.length && j + passoJ >= 0)
+				&& (i + passoI >= 0 && j + passoJ < matriz.length)
+				&& (i + passoI >= 0 && j + passoJ >= 0);
+	}
+
 	private boolean checar(Casa c, MovimentoEstado anterior) {
-		
-		while(anterior!=null ){
-			if(anterior.eliminar != null && anterior.eliminar.equals(c)){
-				 return true;
+
+		while (anterior != null) {
+			if (anterior.eliminar != null && anterior.eliminar.equals(c)) {
+				return true;
 			}
 			anterior = anterior.anterior;
 		}
@@ -562,9 +661,10 @@ public class Estado {
 		// tentar realizar movimento de captura na diagonal superior direita
 		// caso não consiga retorna null
 		MovimentoEstado temp = null;
-		temp = capturaDSD(lin, col, eliminar,anterior);
+		boolean ultimo = true;
+		temp = capturaDSD(lin, col, eliminar, anterior);
 		if (temp != null) {
-
+			ultimo = false;
 			estados.add(temp);
 			temp.anterior = anterior;
 			// caso haja captura de peça, checar todos os movimentos que a
@@ -574,9 +674,9 @@ public class Estado {
 		}
 		// tentar realizar movimento de captura na diagonal superior esquerda
 		// caso não consiga retorna null
-		temp = capturaDSE(lin, col, eliminar,anterior);
+		temp = capturaDSE(lin, col, eliminar, anterior);
 		if (temp != null) {
-
+			ultimo = false;
 			estados.add(temp);
 			temp.anterior = anterior;
 			// caso haja captura de peça, checar todos os movimentos que a
@@ -586,8 +686,9 @@ public class Estado {
 		}
 		// tentar realizar movimento de captura na diagonal inferior direita
 		// caso não consiga retorna null
-		temp = capturaDID(lin, col, eliminar,anterior);
+		temp = capturaDID(lin, col, eliminar, anterior);
 		if (temp != null) {
+			ultimo = false;
 			estados.add(temp);
 			temp.anterior = anterior;
 			// caso haja captura de peça, checar todos os movimentos que a
@@ -597,9 +698,9 @@ public class Estado {
 		}
 		// tentar realizar movimento de captura na diagonal inferior esquerda
 		// caso não consiga retorna null
-		temp = capturaDIE(lin, col, eliminar,anterior);
+		temp = capturaDIE(lin, col, eliminar, anterior);
 		if (temp != null) {
-
+			ultimo = false;
 			estados.add(temp);
 			temp.anterior = anterior;
 			// caso haja captura de peça, checar todos os movimentos que a
@@ -607,16 +708,51 @@ public class Estado {
 			estados.addAll(temp.t.movimentosPossiveis(lin - 2, col - 2, true,
 					temp));
 		}
+		if (ultimo && anterior != null) {
+
+			int valor = anterior.t.matriz[lin][col];
+			if (anterior.t.matriz[lin][col] == PECAJOGADOR1 && lin == 7) {
+				valor = DAMAJOGADOR1;
+			} else if (anterior.t.matriz[lin][col] == PECAJOGADOR2 && lin == 0) {
+				valor = DAMAJOGADOR2;
+			}
+			anterior.t.matriz[lin][col] = valor;
+		}
 	}
 
 	// métodos para ajudar a debugar
 	public void exibirCaminho(MovimentoEstado inicial) {
 		while (inicial.anterior != null && !inicial.anterior.t.equals(this)) {
-			System.err.println(inicial.c.posicao[0] + ":"
-					+ inicial.c.posicao[1] + "seu anterior é "
-					+ inicial.anterior.c.posicao[0] + ":"
-					+ inicial.anterior.c.posicao[1]);
+			System.err.println(inicial.atual.posicao[0] + ":"
+					+ inicial.atual.posicao[1] + "seu anterior é "
+					+ inicial.anterior.atual.posicao[0] + ":"
+					+ inicial.anterior.atual.posicao[1]);
 			inicial = inicial.anterior;
 		}
 	}
+
+	public int[][] getMatriz() {
+		return matriz;
+	}
+
+	public void setMatriz(int[][] matriz) {
+		this.matriz = matriz;
+	}
+
+	public int getQtdPecaJ1() {
+		return qtdPecaJ1;
+	}
+
+	public void setQtdPecaJ1(int qtdPecaJ1) {
+		this.qtdPecaJ1 = qtdPecaJ1;
+	}
+
+	public int getQtdPecaJ2() {
+		return qtdPecaJ2;
+	}
+
+	public void setQtdPecaJ2(int qtdPecaJ2) {
+		this.qtdPecaJ2 = qtdPecaJ2;
+	}
+
 }

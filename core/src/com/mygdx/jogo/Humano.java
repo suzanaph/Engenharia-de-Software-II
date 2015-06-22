@@ -8,6 +8,7 @@ package com.mygdx.jogo;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import java.util.List;
 
 /**
@@ -25,28 +26,28 @@ public class Humano extends Jogador {
     */
     @Override
     public boolean update(Casa selecionada, Stage estagio) {
-        if (getSelAreaPeca() != null && getSelAreaPeca().peca != null && getSelAreaPeca().peca.imagem.getActions().size > 0) {
+     
 
-        } else {
-            
             if (getSelAreaPeca() != null && getCaminhoEscolhido() != null) {
                  if(moverPeca(estagio)){
                 	 anterior = null;
-                return true;
+                	 return true;
                 }else{
                 	return false;
                 }
             } else if (selecionada != null) {
-
+            	// impede que recalcule o caminho de uma peça ja clicada ao clicar nela denovo.
                 if (selecionada.peca != null && selecionada != anterior) {// fazer algo para isso executar uma unica vez
                     if (getPecas().contains(selecionada.peca)) {
-                    	// caso vc tenha uma peï¿½a selecionada antes e selecione outro vc apaga a seleï¿½ï¿½o
-                        if (getSelAreaPeca() != null && getSelAreaPeca().peca != null && getVizinhosSelAreaPeca()!=null) {
+                    	// caso vc tenha uma peça selecionada antes e selecione outro vc apaga a seleção
+                        if (getSelAreaPeca() != null && getSelAreaPeca().peca != null
+                       && getVizinhosSelAreaPeca()!=null) {
                             getSelAreaPeca().peca.imagem.setColor(getSelAreaPeca().peca.getColorOriginal());
                             ocultarVizinhos();
                         }
                         setSelAreaPeca(selecionada);
                         setVizinhosSelAreaPeca(Jogo.getInstance().getTabuleiro().caminhosDisponiveis(selecionada, getQtdJogadas() > 0));
+                       
                         if (getVizinhosSelAreaPeca().size() == 0 && getQtdJogadas() > 0) {
                             return true;
                         }
@@ -59,7 +60,7 @@ public class Humano extends Jogador {
                     casaValida(selecionada);
                 }
             }
-        }
+        
         return false;
     }
     /**MÃ©todo utilizado para descobrir se a casa selecionada pelo jogador pertence a um caminho possivel gerado 
@@ -68,7 +69,7 @@ public class Humano extends Jogador {
     */
     private void casaValida(Casa selecionada) {
         for (List<MovimentoEstado> col : getVizinhosSelAreaPeca()) {
-            if (col.get(0).c.equals(selecionada)) {
+            if (col.get(0).atual.equals(selecionada)) {
                 setCaminhoEscolhido(col);
 
             }

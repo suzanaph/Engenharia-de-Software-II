@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class Peca {
 
     Boolean dama;
-    Actor imagem;
+     Actor imagem;
     private Color original;
 
     Peca(int x, int y) {
@@ -32,4 +32,11 @@ public class Peca {
      public Color getColorOriginal(){
        return this.original;
     }
+	public Actor getImagem() {
+		return imagem;
+	}
+	public void setImagem(Actor imagem) {
+		this.imagem = imagem;
+	}
+     
 }
