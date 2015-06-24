@@ -148,6 +148,8 @@ public abstract class Jogador {
 		if (Jogo.tempo > tempoMover)
 			if (selAreaPeca != null && caminhoEscolhido != null) {
 				if (!caminhoEscolhido.isEmpty()) {
+                                    
+                                    Jogo.getInstance().getSomPeca().play();
 					List<MovimentoEstado> to = caminhoEscolhido;
 					MovimentoEstado alvo = to.get(0);
 					Peca p = selAreaPeca.peca;

@@ -3,27 +3,33 @@ package com.mygdx.jogo;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.mygdx.janelas.JanelaMenu;
 import com.badlogic.gdx.graphics.Color;
+
 public class Jogo extends Game {
+
     public final static int MAQUINA = 0;
-    public final static int HUMANO =1;
-    public final static Color COLORJOGADOR1 =Color.ORANGE;
-    public final static Color COLORJOGADOR2 =Color.TEAL;
-    public final static Color COLORDAMAJOGADOR1 =Color.MAROON;
-    public final static Color COLORDAMAJOGADOR2 =Color.PURPLE;
+    public final static int HUMANO = 1;
+    public final static Color COLORJOGADOR1 = Color.ORANGE;
+    public final static Color COLORJOGADOR2 = Color.TEAL;
+    public final static Color COLORDAMAJOGADOR1 = Color.MAROON;
+    public final static Color COLORDAMAJOGADOR2 = Color.PURPLE;
     public static float tempo;
     private static Jogo instance;
     private Music musica;
+    private Sound somPeca;
+    private Sound somBotao;
     private int dificuldade;
     private boolean somAtivo;
     private Tabuleiro tabuleiro;
     private Jogador jogador1;
     private Jogador jogador2;
+
     public static Jogo getInstance() {
         return instance;
     }
-    
+
     /**
      * @return the dificuldade
      */
@@ -38,6 +44,18 @@ public class Jogo extends Game {
         dificuldade = aDificuldade;
     }
 
+    public Sound getSomPeca() {
+        return somPeca;
+    }
+
+    public void setSomPeca(String diretorio) {
+        somPeca = Gdx.audio.newSound(Gdx.files.internal(diretorio));
+    }
+
+    public void setSomBotao(String diretorio) {
+        somBotao = Gdx.audio.newSound(Gdx.files.internal(diretorio));
+    }
+
     public Music getMusica() {
         return musica;
     }
@@ -45,18 +63,20 @@ public class Jogo extends Game {
     public void setMusica(String url) {
         musica = Gdx.audio.newMusic(Gdx.files.internal(url));
     }
-    
+
     public Jogo() {
+
     }
 
     @Override
     public void create() {
-        instance = this; 
+      
+        instance = this;
         setJogador1(HUMANO);
         getJogador1().setTurno(true);
         setJogador2(MAQUINA);
         resetTabuleiro();
-        
+
         setScreen(new JanelaMenu());
     }
 
@@ -85,7 +105,7 @@ public class Jogo extends Game {
     public Tabuleiro getTabuleiro() {
         return tabuleiro;
     }
-    
+
     /**
      * @param tabuleiro the tabuleiro to set
      */
@@ -104,12 +124,12 @@ public class Jogo extends Game {
      * @param jogador1 the jogador1 to set
      */
     public void setJogador1(int tipo) {
-        switch(tipo){
+        switch (tipo) {
             case MAQUINA:
                 this.jogador1 = new Maquina();
                 break;
             case HUMANO:
-                this.jogador1 = new Humano();
+                this.jogador1 = new Maquina();
                 break;
         }
         this.jogador1.setId(1);
@@ -126,14 +146,14 @@ public class Jogo extends Game {
      * @param jogador2 the jogador2 to set
      */
     public void setJogador2(int tipo) {
-         switch(tipo){
+        switch (tipo) {
             case MAQUINA:
                 this.jogador2 = new Maquina();
                 break;
             case HUMANO:
-                this.jogador2 = new Humano();
+                this.jogador2 = new Maquina();
                 break;
         }
-         this.jogador2.setId(2);
+        this.jogador2.setId(2);
     }
 }

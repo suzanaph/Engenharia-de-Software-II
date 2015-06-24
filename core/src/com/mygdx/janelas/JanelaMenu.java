@@ -16,38 +16,36 @@ import java.util.ArrayList;
  *
  * @author manue_000
  */
-
-
 public class JanelaMenu extends Janela {
 
-    
-    
-
     public JanelaMenu() {
-         super();
-         botoes = new ArrayList<Botao>();
-        //Botão para iniciar acao partida.
-        botoes.add(new Botao("iniciar.png", 250, 300,new BAMudarTela(BAMudarTela.JOGO)));
-        //Botão para ver acao pontuação
-        botoes.add(new Botao("pontuacao.png", 250, 100,new BAMudarTela(BAMudarTela.PONTUACAO)));
-        //Botão para ver as regras
-        botoes.add(new Botao("regras.png", 350, 200,new BAAbrirArquivo("regras")));
-        //Botão para ver as configurações
-        botoes.add(new Botao("configuracoes.png", 450, 300,new BAMudarTela(BAMudarTela.CONFIGURACOES)));
-        //Botão para sair do jogo
-        botoes.add(new Botao("sair.png", 450, 100,new BASair("jogo")));
+        super();
+        Jogo.getInstance().setSomPeca("audios/somPeca.ogg");
         
+        botoes = new ArrayList<Botao>();
+        //Botão para iniciar acao partida.
+        botoes.add(new Botao("iniciar.png", 250, 300, new BAMudarTela(BAMudarTela.JOGO)));
+        //Botão para ver acao pontuação
+        botoes.add(new Botao("pontuacao.png", 250, 100, new BAMudarTela(BAMudarTela.PONTUACAO)));
+        //Botão para ver as regras
+        botoes.add(new Botao("regras.png", 350, 200, new BAAbrirArquivo("regras")));
+        //Botão para ver as configurações
+        botoes.add(new Botao("configuracoes.png", 450, 300, new BAMudarTela(BAMudarTela.CONFIGURACOES)));
+        //Botão para sair do jogo
+        botoes.add(new Botao("sair.png", 450, 100, new BASair("jogo")));
+
         fundo = new Image(new Texture("fundo.png"));
-        fundo.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(1),Actions.fadeIn(1)));
+        fundo.addAction(Actions.sequence(Actions.fadeOut(0), Actions.delay(1), Actions.fadeIn(1)));
         estagio.addActor(fundo);
         for (Botao botao : botoes) {
-            botao.imagem.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(2),Actions.fadeIn(1)));
+            botao.imagem.addAction(Actions.sequence(Actions.fadeOut(0), Actions.delay(2), Actions.fadeIn(1)));
             estagio.addActor(botao.imagem);
         }
-        if(Jogo.getInstance().getMusica()!=null)
-        Jogo.getInstance().getMusica().stop();
-         Jogo.getInstance().setMusica("audios/menu.ogg");
-         Jogo.getInstance().getMusica().play();
+        if (Jogo.getInstance().getMusica() != null) {
+            Jogo.getInstance().getMusica().stop();
+        }
+        Jogo.getInstance().setMusica("audios/menu.ogg");
+        Jogo.getInstance().getMusica().play();
     }
 
     @Override
@@ -76,7 +74,7 @@ public class JanelaMenu extends Janela {
 
     @Override
     void processa() {
-        
+
     }
 
 }
