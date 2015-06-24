@@ -117,6 +117,7 @@ public class Estado {
 
 	public void setQtdDamaJ2(int qtdDamaJ2) {
 		this.qtdDamaJ2 = qtdDamaJ2;
+
 	}
 
 	/**

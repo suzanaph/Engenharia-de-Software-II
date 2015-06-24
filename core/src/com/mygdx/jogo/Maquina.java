@@ -22,8 +22,10 @@ public class Maquina extends Jogador {
 	public boolean update(Casa entrada, Stage estagio) {
 
 		if (getCaminhoEscolhido() == null && getSelAreaPeca() == null) {
+
 			MinMax m = new MinMax(getId());
 			setCaminhoEscolhido(m.MinMaxDecision( Jogo.getInstance().getTabuleiro().getEstado()));
+
 			setSelAreaPeca(getCaminhoEscolhido().get(0).atual);
 			getCaminhoEscolhido().remove(0);
 		} else {

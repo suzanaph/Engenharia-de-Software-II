@@ -124,6 +124,7 @@ public class Tabuleiro {
         
         return saida;
     }
+
     public List<List<MovimentoEstado>> caminhosDisponiveis(int lin,int col,boolean capturado,Estado t) {
     	 List<List<MovimentoEstado>> saida = new ArrayList<List<MovimentoEstado>>();
          
@@ -132,6 +133,7 @@ public class Tabuleiro {
          estados = t.melhorCusto(lin, col, estados);
          for (MovimentoEstado est : estados) {
              saida.add(t.ordenar(est));
+
          }
          
          return saida;

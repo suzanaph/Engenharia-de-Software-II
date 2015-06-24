@@ -14,19 +14,23 @@ public class MovimentoEstado {
     Casa atual;
     Casa eliminar;// guarda referência da peça que foi eliminada
     MovimentoEstado anterior;
+
    
+
     
     MovimentoEstado(Casa matrizCasa, Estado inicial) {
         this.t = inicial;
         this.atual = matrizCasa; 
-   
+
+       
     }
+   
     
     MovimentoEstado(Casa matrizCasa,Casa eliminar, Estado inicial) {
         this.t = inicial;
         this.atual = matrizCasa;  
         this.eliminar = eliminar;
-       
+
     }
     public int getCustoJ1(){
         return t.saldoJ1();

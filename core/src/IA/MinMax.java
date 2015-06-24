@@ -8,6 +8,7 @@ import java.util.Random;
 import com.mygdx.jogo.Estado;
 import com.mygdx.jogo.Jogo;
 import com.mygdx.jogo.MovimentoEstado;
+
 import com.mygdx.jogo.Tabuleiro;
 
 public class MinMax {
@@ -20,6 +21,7 @@ public class MinMax {
 	public MinMax(int jogador){
 		jogadorInicial = jogador;
 	}
+
 	// Metodo principal
 	/**
 	 * Recebe o estado atual do tabuleiro.
@@ -28,7 +30,9 @@ public class MinMax {
 	 *            Estado atual do tabuleiro.
 	 * @return A melhor jogada que foi encontrada pelo MinMax
 	 */
+
 	public List<MovimentoEstado> MinMaxDecision(Estado raiz) {
+
 		// o valor da melhor escolha até agora (maior valor) ao longo do caminho
 		// de MAX
 		int alfa = Integer.MIN_VALUE;
@@ -46,6 +50,7 @@ public class MinMax {
 		caminho = new ArrayList<List<MovimentoEstado>>();
 		valores = new ArrayList<Integer>();
 		int v = MaxValue(raiz, alfa, beta, 0,jogadorInicial);
+
 		// Busca na arvore o caminho com o custo V (Caso 2 ou mais caminhos
 		// tiverem o melhor custo, um deles é escolhido aleatoriamente)
 		return verificaCaminho(caminho, v);
@@ -58,10 +63,12 @@ public class MinMax {
 		//A lista "caminhos" possui todos os movimentos, o maior numero de capturas é a maior lista
 		int maiorNumeroDeCapturas = -1;
 		Random r = new Random();
+
 		for (int i=0;i<caminhos.size();i++) {
 			List<MovimentoEstado> list = caminhos.get(i);
 			//Se a lista nao esta vazia e o valor for igual ao melhor valor encontrado no MinMax
 			if (!list.isEmpty() && valores.get(i) == v) {
+
 				//Se for melhor caminho encontrado anteriormente com relacao ao numero de capturas
 				if (list.size() > maiorNumeroDeCapturas) {
 					maiorNumeroCapturas = list;
@@ -103,10 +110,12 @@ public class MinMax {
 					
 					List<List<MovimentoEstado>> jogadas = Jogo.getInstance()
 							.getTabuleiro().caminhosDisponiveis(i, j, false,noAtual);
+
 					//Loop das jogadas
 					for (List<MovimentoEstado> list : jogadas) {
 						//Testa se uma jogada nao é vazia
 						if (!list.isEmpty()) {
+
 							possuiJogada = true;
 							//Pega o maior valor entre os valores de Min
 							int min = MinValue(list.get(list.size() - 1).getT(), alfa,
@@ -118,11 +127,12 @@ public class MinMax {
 							
 								caminho.add(list);
 								valores.add(min);
+
 							}
 							//Se v for maior que o melhor valor retornado pelo MIN
 							if (v >= beta) {
 								return v;
-								
+
 							}
 							alfa = Math.max(alfa, v);
 						}
@@ -131,6 +141,7 @@ public class MinMax {
 				}
 			}
 		}
+
 		if(!possuiJogada){
 			if (jogadorInicial == 1) {
 				return noAtual.saldoJ1();
@@ -138,9 +149,11 @@ public class MinMax {
 				return noAtual.saldoJ2();
 			}
 		}
+
 		return v;
 
 	}
+
 
 
 
@@ -168,15 +181,18 @@ public class MinMax {
 					//Pega os caminhos disponiveis
 					List<List<MovimentoEstado>> jogadas = Jogo.getInstance()
 							.getTabuleiro().caminhosDisponiveis(i, j, false,raiz);
+
 					//Loop das jogadas
 					for (List<MovimentoEstado> list : jogadas) {
 						//Testa se uma jogada nao é vazia
 						if (!list.isEmpty()) {
+
 							possuiJogada = true;
 							int max =MaxValue(list.get(list.size() - 1).getT(), alfa,
 									beta, nivel + 1, jogadorAtual == 1?2:1);
 							//Pega o menor valor entre os valores de MAX
 							v = Math.min(v,max);
+
 							//Se v for menor que o melhor valor retornado pelo MAX
 							if (v <= alfa) {
 								return v;
@@ -187,6 +203,7 @@ public class MinMax {
 				}
 			}
 		}
+
 		if(!possuiJogada){//não teve jogadas
 			if (jogadorInicial == 1) {
 				return raiz.saldoJ1();
@@ -194,7 +211,7 @@ public class MinMax {
 				return raiz.saldoJ2();
 			}
 		}
-		
+
 		return v;
 	}
 
