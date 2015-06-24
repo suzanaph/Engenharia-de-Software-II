@@ -18,6 +18,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.jogo.Jogo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public abstract class Janela implements Screen {
         GL20 gl = Gdx.gl;
         gl.glClearColor(0, 0, 0, 0);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        Jogo.tempo +=Gdx.graphics.getDeltaTime();
         camera.update();
         estagio.act(Gdx.graphics.getDeltaTime());
 

@@ -44,6 +44,8 @@ public class JanelaMenu extends Janela {
             botao.imagem.addAction(Actions.sequence(Actions.fadeOut(0),Actions.delay(2),Actions.fadeIn(1)));
             estagio.addActor(botao.imagem);
         }
+        if(Jogo.getInstance().getMusica()!=null)
+        Jogo.getInstance().getMusica().stop();
          Jogo.getInstance().setMusica("audios/menu.ogg");
          Jogo.getInstance().getMusica().play();
     }

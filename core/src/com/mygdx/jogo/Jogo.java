@@ -12,6 +12,7 @@ public class Jogo extends Game {
     public final static Color COLORJOGADOR2 =Color.TEAL;
     public final static Color COLORDAMAJOGADOR1 =Color.MAROON;
     public final static Color COLORDAMAJOGADOR2 =Color.PURPLE;
+    public static float tempo;
     private static Jogo instance;
     private Music musica;
     private int dificuldade;
@@ -53,7 +54,7 @@ public class Jogo extends Game {
         instance = this; 
         setJogador1(HUMANO);
         getJogador1().setTurno(true);
-        setJogador2(HUMANO);
+        setJogador2(MAQUINA);
         resetTabuleiro();
         
         setScreen(new JanelaMenu());
@@ -111,6 +112,7 @@ public class Jogo extends Game {
                 this.jogador1 = new Humano();
                 break;
         }
+        this.jogador1.setId(1);
     }
 
     /**
@@ -132,5 +134,6 @@ public class Jogo extends Game {
                 this.jogador2 = new Humano();
                 break;
         }
+         this.jogador2.setId(2);
     }
 }
