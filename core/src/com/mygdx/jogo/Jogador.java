@@ -192,7 +192,7 @@ public abstract class Jogador {
 						return false;
 					}
 				} else {
-					qtdJogadas = 0;
+					//qtdJogadas = 0;
 					selAreaPeca = null;
 					caminhoEscolhido = null;
 					this.caminhos = null;

@@ -1,9 +1,13 @@
 package com.mygdx.jogo;
 
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.mygdx.dado.Pontuacao;
+import com.mygdx.dado.Usuario;
 import com.mygdx.janelas.JanelaMenu;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -29,7 +33,7 @@ public class Jogo extends Game {
     private Jogador jogador1;
     private Jogador jogador2;
     private BitmapFont fonte;
-
+    private Usuario usuario;
     public void setFont(String diretorio) {
         fonte = new BitmapFont(Gdx.files.internal(diretorio + ".fnt"), Gdx.files.internal(diretorio + ".png"), false);
     }
@@ -94,7 +98,7 @@ public class Jogo extends Game {
 
     @Override
     public void create() {
-
+    	
         instance = this;
         setJogador1(HUMANO);
         getJogador1().setTurno(true);
@@ -153,7 +157,7 @@ public class Jogo extends Game {
                 this.jogador1 = new Maquina();
                 break;
             case HUMANO:
-                this.jogador1 = new Maquina();
+                this.jogador1 = new Humano();
                 break;
         }
         this.jogador1.setId(1);
@@ -175,9 +179,32 @@ public class Jogo extends Game {
                 this.jogador2 = new Maquina();
                 break;
             case HUMANO:
-                this.jogador2 = new Maquina();
+                this.jogador2 = new Humano();
                 break;
         }
         this.jogador2.setId(2);
+    }
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+    public void desempate(){
+    	Estado estado = Jogo.getInstance().getTabuleiro().getEstado();
+		if ((estado.getQtdPecaJ2() + estado.getQtdDamaJ2()) > (estado
+				.getQtdDamaJ1() + estado.getQtdPecaJ1())) {
+			JOptionPane.showMessageDialog(null, "perdeu! ");
+			Jogo.getInstance().setScreen(new JanelaMenu());
+		}else if ((estado.getQtdPecaJ2() + estado.getQtdDamaJ2()) < (estado
+				.getQtdDamaJ1() + estado.getQtdPecaJ1())) {
+			JOptionPane.showMessageDialog(null, "ganhou! ");
+			Jogo.getInstance().setScreen(new JanelaMenu());
+		}else {
+			JOptionPane.showMessageDialog(null, "empatou! ");
+			Jogo.getInstance().setScreen(new JanelaMenu());
+		}
     }
 }

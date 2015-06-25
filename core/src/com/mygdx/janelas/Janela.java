@@ -60,10 +60,7 @@ public abstract class Janela implements Screen {
         estagio.act(Gdx.graphics.getDeltaTime());
 
         estagio.draw();
-        estagio.getBatch().begin();
-        if (Jogo.getInstance().getFont()!=null)
-        Jogo.getInstance().getFont().draw(estagio.getBatch(), "teste testoso",600, 500);
-           estagio.getBatch().end();
+        
         cliques();
         for (Botao botoe : botoes) {
             botoe.foiClicado(clicado);

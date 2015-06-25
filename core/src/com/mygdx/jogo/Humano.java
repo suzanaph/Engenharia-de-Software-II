@@ -8,8 +8,11 @@ package com.mygdx.jogo;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.janelas.JanelaMenu;
 
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 /**
  * classe que pega as entradas do pc para movimentar as peças

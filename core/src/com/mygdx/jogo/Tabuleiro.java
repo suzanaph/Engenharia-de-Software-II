@@ -234,7 +234,9 @@ public class Tabuleiro {
                 matrizCasas[0][i].peca.imagem.setColor(Jogo.COLORDAMAJOGADOR2);
                 matrizCasas[0][i].peca.setColorOriginal(Jogo.COLORDAMAJOGADOR2);
                 matrizCasas[0][i].peca.dama = true;
-               
+               if(Jogo.getInstance().getJogador1().getPecas().contains(matrizCasas[0][i].peca)){
+            	   Jogo.getInstance().getUsuario().setPontuacao(Jogo.getInstance().getUsuario().getPontuacao() + 50);
+               }
                 Jogo.getInstance().getSomDama().play();
             }
         }

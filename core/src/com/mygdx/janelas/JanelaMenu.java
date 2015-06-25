@@ -9,8 +9,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.mygdx.dado.Pontuacao;
 import com.mygdx.jogo.Jogo;
+
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,6 +24,8 @@ public class JanelaMenu extends Janela {
 
     public JanelaMenu() {
         super();
+        
+        
         Jogo.getInstance().setSomPeca("audios/somPeca.ogg");
         
         botoes = new ArrayList<Botao>();
@@ -46,6 +52,9 @@ public class JanelaMenu extends Janela {
         }
         Jogo.getInstance().setMusica("audios/menu.ogg");
         Jogo.getInstance().getMusica().play();
+        String nome = JOptionPane.showInputDialog(null, "digite sue nome de usuario");
+        if(Jogo.getInstance().getUsuario()==null)
+        Jogo.getInstance().setUsuario( Pontuacao.getUsuario(nome));
     }
 
     @Override
