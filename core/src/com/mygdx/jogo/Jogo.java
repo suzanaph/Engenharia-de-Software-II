@@ -20,6 +20,8 @@ public class Jogo extends Game {
     private Music musica;
     private Sound somPeca;
     private Sound somBotao;
+    private Sound somDama;
+    private Sound captura;
     private int dificuldade;
     private boolean somAtivo;
     private Tabuleiro tabuleiro;
@@ -51,11 +53,20 @@ public class Jogo extends Game {
     public void setSomPeca(String diretorio) {
         somPeca = Gdx.audio.newSound(Gdx.files.internal(diretorio));
     }
+ public void setSomCaptura(String diretorio) {
+        captura = Gdx.audio.newSound(Gdx.files.internal(diretorio));
+    }
+ public Sound getSomCaptura(){
+ return captura;}
 
     public void setSomBotao(String diretorio) {
         somBotao = Gdx.audio.newSound(Gdx.files.internal(diretorio));
     }
-
+  public void setSomDama(String diretorio) {
+        somDama = Gdx.audio.newSound(Gdx.files.internal(diretorio));
+    }
+  public Sound getSomDama(){
+  return somDama;}
     public Music getMusica() {
         return musica;
     }
