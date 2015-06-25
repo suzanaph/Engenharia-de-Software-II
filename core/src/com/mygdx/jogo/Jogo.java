@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.mygdx.janelas.JanelaMenu;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class Jogo extends Game {
 
@@ -19,7 +20,7 @@ public class Jogo extends Game {
     private static Jogo instance;
     private Music musica;
     private Sound somPeca;
-    private Sound somBotao;
+
     private Sound somDama;
     private Sound captura;
     private int dificuldade;
@@ -27,6 +28,15 @@ public class Jogo extends Game {
     private Tabuleiro tabuleiro;
     private Jogador jogador1;
     private Jogador jogador2;
+    private BitmapFont fonte;
+
+    public void setFont(String diretorio) {
+        fonte = new BitmapFont(Gdx.files.internal(diretorio + ".fnt"), Gdx.files.internal(diretorio + ".png"), false);
+    }
+
+    public BitmapFont getFont() {
+        return fonte;
+    }
 
     public static Jogo getInstance() {
         return instance;
@@ -53,20 +63,23 @@ public class Jogo extends Game {
     public void setSomPeca(String diretorio) {
         somPeca = Gdx.audio.newSound(Gdx.files.internal(diretorio));
     }
- public void setSomCaptura(String diretorio) {
+
+    public void setSomCaptura(String diretorio) {
         captura = Gdx.audio.newSound(Gdx.files.internal(diretorio));
     }
- public Sound getSomCaptura(){
- return captura;}
 
-    public void setSomBotao(String diretorio) {
-        somBotao = Gdx.audio.newSound(Gdx.files.internal(diretorio));
+    public Sound getSomCaptura() {
+        return captura;
     }
-  public void setSomDama(String diretorio) {
+
+    public void setSomDama(String diretorio) {
         somDama = Gdx.audio.newSound(Gdx.files.internal(diretorio));
     }
-  public Sound getSomDama(){
-  return somDama;}
+
+    public Sound getSomDama() {
+        return somDama;
+    }
+
     public Music getMusica() {
         return musica;
     }
@@ -81,7 +94,7 @@ public class Jogo extends Game {
 
     @Override
     public void create() {
-      
+
         instance = this;
         setJogador1(HUMANO);
         getJogador1().setTurno(true);

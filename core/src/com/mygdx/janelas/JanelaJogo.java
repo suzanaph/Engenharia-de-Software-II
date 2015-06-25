@@ -35,6 +35,8 @@ public class JanelaJogo extends Janela {
         Jogo.getInstance().setMusica("audios/jogo.ogg");
         Jogo.getInstance().getMusica().play();
         Jogo.getInstance().getMusica().setLooping(true);
+        Jogo.getInstance().setFont("fontes/score");
+        
 
     }
 

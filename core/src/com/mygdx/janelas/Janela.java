@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -36,8 +37,9 @@ public abstract class Janela implements Screen {
     protected List<Sound> sons;
     protected Actor fundo;
     protected Actor clicado;
-
+    
     public Janela() {
+        
         vetor = new Vector3();
         camera = new OrthographicCamera(800, 600);
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -45,6 +47,7 @@ public abstract class Janela implements Screen {
         estagio = new Stage(view);
         sons = new ArrayList<Sound>();
         botoes = new ArrayList<Botao>();
+      
     }
 
     @Override
@@ -57,6 +60,10 @@ public abstract class Janela implements Screen {
         estagio.act(Gdx.graphics.getDeltaTime());
 
         estagio.draw();
+        estagio.getBatch().begin();
+        if (Jogo.getInstance().getFont()!=null)
+        Jogo.getInstance().getFont().draw(estagio.getBatch(), "teste testoso",600, 500);
+           estagio.getBatch().end();
         cliques();
         for (Botao botoe : botoes) {
             botoe.foiClicado(clicado);
